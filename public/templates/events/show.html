@@ -1,0 +1,12 @@
+<h1>Event Show</h1>
+
+<div ng-resource="event in events">
+  <h2>{{ events.selected.title }}</h2>
+  <h3>{{ events.selected.date }}</h3>
+  <p>{{ events.selected.description }} </p>
+  <p>{{ events.selected.location }} </p>
+
+  <a ui-sref="updateEvent({ id: events.selected._id })">Update this event</a>  |  
+
+  <a href="#" ng-click="events.delete(events.selected)">Delete this event</a>
+</div>
