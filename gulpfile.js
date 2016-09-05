@@ -35,12 +35,12 @@ gulp.task('sass', function() {
 gulp.task('default', function() {
   livereload.listen();
 
-  gulp.watch(['lib/**/*', 'public/index.html'], function() {
+  gulp.watch(['lib/**/*', 'public/index.html', 'public/templates/*'], function() {
     runSequence(['concat', 'sass'], function() {
       livereload.reload('public/index.html');
     });
   });
-  
+
   gulp.watch('bower.json', function() {
     runSequence('bower', function() {
       livereload.reload('public/index.html');
