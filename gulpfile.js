@@ -81,7 +81,11 @@ gulp.task('default', ['bower', 'sass', 'concat', 'copy', 'replace:dev'], functio
   
   livereload.listen();
 
-  gulp.watch(['lib/templates/**/*','lib/index.html'], ['copy']);
+  gulp.watch(['lib/templates/**/*','lib/index.html'], function() {
+      runSequence(['copy'], function() {
+        livereload.reload('public/index.html');
+      });
+    });
 
   gulp.watch(['lib/js/**/*', 'lib/scss/**/*'], function() {
     runSequence(['concat', 'sass'], function() {
