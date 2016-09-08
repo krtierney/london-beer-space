@@ -10,6 +10,7 @@ Event.collection.drop();
 
 User.create([
   {
+  isAdmin: true,
   username: "admin",
   email: "admin@example.com",
   password: "password",

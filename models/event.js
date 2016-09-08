@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var s3 = require('../config/s3');
-console.log(s3);
 
 var eventSchema = new mongoose.Schema({
   title: { type: String },

@@ -10,7 +10,7 @@ var twitterController = require('../controllers/twitterOauth');
 var upload = require('./upload');
 
 function secureRoute(req, res, next) {
-  if(!req.headers.authorization) return res.status(401).json({ message: 'Please log in before accessing this resource'});
+  if(!req.headers.authorization) return res.status(401).json({ message: 'Unauthorized'});
 
   var token = req.headers.authorization.replace('Bearer ', '');
 
@@ -31,7 +31,7 @@ router.route('/events/:id')
   .get(eventsController.show)
   .put(secureRoute, upload.single('image'), eventsController.update)
   .patch(secureRoute, upload.single('image'), eventsController.update)
-  .delete(secureRoute, eventsController.delete);
+  .delete(secureRoute, eventsController.delete)
   .post(secureRoute, upload.single('image'),eventsController.create);
 
 router.post('/register', authController.register);
