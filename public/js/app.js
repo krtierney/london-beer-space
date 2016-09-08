@@ -7,7 +7,6 @@ angular
   setupInterceptors.$inject = ["$httpProvider"];
   function setupInterceptors($httpProvider) {
     $httpProvider.interceptors.push("AuthInterceptor");
-    $httpProvider.interceptors.push("DateInterceptor");
   }
 
   Router.$inject = ["$stateProvider", "$urlRouterProvider"];
@@ -44918,6 +44917,21 @@ function CurrentUserController(TokenService, $state, $rootScope) {
     self.errorMessage = "Please log in.";
   });
 }
+angular 
+  .module('LdnBeerApp')
+  .directive('date', date);
+
+function date() {
+  return {
+    restrict: 'A',
+    require: "ngModel",
+    link: function(scope, element, attrs, ngModel) {
+      ngModel.$formatters.push(function(value) {
+        return new Date(value);
+      });
+    }
+  }
+}
 angular
   .module("LdnBeerApp")
   .factory("Event", Event);
@@ -44971,31 +44985,6 @@ function AuthInterceptor(TokenService, API_URL, $rootScope) {
       }
 
       return res.data;
-    }
-  }
-}
-angular
-  .module("LdnBeerApp")
-  .factory("DateInterceptor", DateInterceptor);
-
-DateInterceptor.$inject = ["TokenService", "API_URL", "$rootScope"];
-function DateInterceptor(TokenService, API_URL, $rootScope) {
-  return {
-    response: function(res) {
-      if(res.config.url.match(API_URL) && res.data) {
-        if(res.data instanceof Array) {
-          res.data = res.data.map(function(record) {
-            if(record.hasOwnProperty('date')) {
-              record.date = new Date(record.date);
-            }
-            return record;
-          });
-        }
-        else if(res.data.hasOwnProperty('date')) {
-          res.data.date = new Date(res.data.date);
-        }
-      }
-      return res;
     }
   }
 }
