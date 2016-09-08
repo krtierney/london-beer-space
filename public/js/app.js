@@ -14,7 +14,8 @@ angular
     $stateProvider
       .state("home", {
         url: "/",
-        templateUrl: "templates/home.html"
+        templateUrl: "templates/home.html",
+        controller: "EventsController as events"
       })
       .state("login", {
         url: "/login",
@@ -28,19 +29,23 @@ angular
       })
       .state("eventsIndex", {
         url: "/events",
-        templateUrl: "templates/events/index.html"
+        templateUrl: "templates/events/index.html", 
+        controller: "EventsController as events"
       })
       .state("createEvent", {
         url: "/events/new",
-        templateUrl: "templates/events/create.html"
-      })
-      .state("updateEvent", {
-        url: "/events/:id/update",
-        templateUrl: "templates/events/update.html"
+        templateUrl: "templates/events/create.html",
+        controller: "CreateEventsController as createEvent"
       })
       .state("showEvent", {
         url: "/events/:id",
-        templateUrl: "templates/events/show.html"
+        templateUrl: "templates/events/show.html",
+        controller: "ShowEventsController as showEvent"
+      })
+      .state("updateEvent", {
+        url: "/events/:id/update",
+        templateUrl: "templates/events/update.html",
+        controller: "UpdateEventsController as updateEvent"
       });
 
       $urlRouterProvider.otherwise("/");
@@ -44801,14 +44806,12 @@ function EventsController(Event, $state) {
 
   this.all = Event.query();
 
-  this.selected = null;
-
   this.new = {};
 
   this.select = function select(event) {
+    console.log($state.params);
     $state.go("showEvent");
-    this.selected = Event.get({ id: event._id });
-    // console.log(this.selected);
+    this.selected = Event.get($state.params);
   }
 
   this.deselect = function deselect() {
@@ -44816,25 +44819,14 @@ function EventsController(Event, $state) {
   }
 
   this.save = function newEvent() {
-    Event.save(self.new, function(event) {
-      self.all.push(event);
-      console.log(event);
-      self.new = {};
+    Event.save(self.new, function() {
       $state.go("eventsIndex");
     });
   }
 
   this.update = function updateEvent() {
-    console.log(self.selected);
-    self.selected.$update(function(updatedEvent) {
-      var index = self.all.findIndex(function(event) {
-        return event._id === updatedEvent._id;
-      });
-
-      self.all.splice(index, 1, updatedEvent);
-      self.selected = null;
-    }, function(err) {
-      console.log(err);
+    self.selected.$update(function() {
+      $state.go("showEvent", $state.params);
     });
   }
 
@@ -45010,5 +45002,47 @@ function TokenService($window, jwtHelper) {
 
   this.clearToken = function clearToken() {
     return $window.localStorage.removeItem('token');
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("CreateEventsController", CreateEventsController);
+
+CreateEventsController.$inject = ["Event", "$state"];
+function CreateEventsController(Event, $state) {
+  this.new = {};
+
+  this.save = function() {
+    Event.save(this.new, function() {
+      $state.go('eventsIndex');
+    });
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("ShowEventsController", ShowEventsController);
+
+ShowEventsController.$inject = ["Event", "$state"];
+function ShowEventsController(Event, $state) {
+  this.selected = Event.get($state.params);
+
+  this.delete = function deleteEvent() {
+    this.selected.$delete(function() {
+      $state.go("eventsIndex");
+    });
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("UpdateEventsController", UpdateEventsController);
+
+UpdateEventsController.$inject = ["Event", "$state"];
+function UpdateEventsController(Event, $state) {
+  this.selected = Event.get($state.params);
+
+  this.update = function updateEvent() {
+    this.selected.$update(function() {
+      $state.go("showEvent", $state.params);
+    });
   }
 }
