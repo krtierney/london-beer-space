@@ -5,6 +5,8 @@ var secret = require('../config/tokens').secret;
 var eventsController = require('../controllers/events');
 var authController = require('../controllers/authentications');
 
+var upload = require('./upload');
+
 function secureRoute(req, res, next) {
   if(!req.headers.authorization) return res.status(401).json({ message: 'Please log in before accessing this resource'});
 
@@ -21,15 +23,12 @@ function secureRoute(req, res, next) {
 
 router.route('/events')
   .get(eventsController.index)
-  .post(secureRoute)
-  .post(eventsController.create);
+  .post(secureRoute, upload.single('image'), eventsController.create);
 
 router.route('/events/:id')
   .get(eventsController.show)
-  .put(secureRoute)
-  .put(eventsController.update)
-  .patch(secureRoute)
-  .patch(eventsController.update)
+  .put(secureRoute, upload.single('image'), eventsController.update)
+  .patch(secureRoute, upload.single('image'), eventsController.update)
   .delete(secureRoute)
   .delete(eventsController.delete);
 

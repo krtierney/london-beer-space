@@ -44807,8 +44807,8 @@ function EventsController(Event, $state) {
 
   this.select = function select(event) {
     $state.go("showEvent");
-    this.selected = Event.get({ id: event._id });
-    // console.log(this.selected);
+    console.log($state.params);
+    this.selected = Event.get($state.params);
   }
 
   this.deselect = function deselect() {
@@ -44816,25 +44816,14 @@ function EventsController(Event, $state) {
   }
 
   this.save = function newEvent() {
-    Event.save(self.new, function(event) {
-      self.all.push(event);
-      console.log(event);
-      self.new = {};
+    Event.save(self.new, function() {
       $state.go("eventsIndex");
     });
   }
 
   this.update = function updateEvent() {
-    console.log(self.selected);
-    self.selected.$update(function(updatedEvent) {
-      var index = self.all.findIndex(function(event) {
-        return event._id === updatedEvent._id;
-      });
-
-      self.all.splice(index, 1, updatedEvent);
-      self.selected = null;
-    }, function(err) {
-      console.log(err);
+    self.selected.$update(function() {
+      $state.go("showEvent", $state.params);
     });
   }
 
@@ -44932,14 +44921,43 @@ function date() {
     }
   }
 }
+angular 
+  .module('LdnBeerApp')
+  .directive('file', file);
+
+function file() {
+  return {
+    restrict: 'A',
+    require: "ngModel",
+    link: function(scope, element, attrs, ngModel) {
+      element.on('change', function(e) {
+        ngModel.$setViewValue(e.target.files[0]);
+      });
+    }
+  }
+}
 angular
   .module("LdnBeerApp")
   .factory("Event", Event);
 
-Event.$inject = ["$resource", "API_URL"];
-function Event($resource, API_URL) {
+Event.$inject = ["$resource", "API_URL", "formData"];
+function Event($resource, API_URL, formData) {
   return $resource(API_URL + "/events/:id", { id: '@_id' }, {
-    update: { method: "PUT" },
+    save: { 
+      method: "POST",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PUT",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PATCH",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
     delete: { method: "DELETE" }
   });
 }
@@ -44988,6 +45006,25 @@ function AuthInterceptor(TokenService, API_URL, $rootScope) {
     }
   }
 }
+angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
 angular
   .module("LdnBeerApp")
   .service("TokenService", TokenService);
