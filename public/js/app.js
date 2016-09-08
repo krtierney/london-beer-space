@@ -44858,19 +44858,17 @@ angular
   .module("LdnBeerApp")
   .controller("LoginController", LoginController);
 
-LoginController.$inject = ["User", "$state", "$rootScope", "$auth"];
-function LoginController(User, $state, $rootScope, $auth) {
-
-  var self = this;
-
+LoginController.$inject = ["$state", "$rootScope", "$auth"];
+function LoginController($state, $rootScope, $auth) {
+  
   this.credentials = {};
 
-  this.submit = function submit() {
+  this.submit = function() {
     $auth.login(this.credentials, {
       url: "/api/login"
     }).then(function() {
-      $state.go("eventsIndex");
       $rootScope.$broadcast("loggedIn");
+      $state.go("eventsIndex");
     });
   }
 
@@ -44878,21 +44876,17 @@ function LoginController(User, $state, $rootScope, $auth) {
   this.authenticate = function(provider) {
     $auth.authenticate(provider)
       .then(function() {
-        self.currentUser = $auth.getPayload();
+        $rootScope.$broadcast("loggedIn");
+        $state.go("eventsIndex");
       });
   }
-
-  this.currentUser = $auth.getPayload();
-
 }
 angular
   .module("LdnBeerApp")
   .controller("RegisterController", RegisterController);
 
-RegisterController.$inject = ["User", "$state", "$rootScope"];
-function RegisterController(User, $state, $rootScope) {
-
-  var self = this;
+RegisterController.$inject = ["$state", "$rootScope"];
+function RegisterController($state, $rootScope) {
 
   this.user = {};
 
@@ -44900,7 +44894,8 @@ function RegisterController(User, $state, $rootScope) {
   this.submit = function submit() {
     $auth.signup(this.user, {
       url: "/api/register"
-    }).then(function() {
+    })
+    .then(function() {
       $state.go("eventsIndex");
       $rootScope.$broadcast("loggedIn");
     });
@@ -44925,7 +44920,7 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
     self.errorMessage = "Please log in.";
   });
 
-  this.logout = function logout() {
+  this.logout = function() {
     $auth.logout();
     this.currentUser = null;
     $state.go("home");
