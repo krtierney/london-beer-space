@@ -1,12 +1,26 @@
 angular
-  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages'])
+  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer'])
   .constant("API_URL", "http://localhost:3000/api")
   .config(setupInterceptors)
+  .config(oAuthConfig)
   .config(Router);
 
   setupInterceptors.$inject = ["$httpProvider"];
   function setupInterceptors($httpProvider) {
     $httpProvider.interceptors.push("AuthInterceptor");
+  }
+
+  oAuthConfig.$inject = ["$authProvider"];
+  function oAuthConfig($authProvider) {
+    $authProvider.facebook({
+      url: '/api/oauth/facebook',
+      clientId: "349428735446661"
+    });
+
+    $authProvider.twitter({
+      url: '/api/oauth/twitter',
+      clientId: "YjSOxNEdFNfHixvgyqpCcIzle"
+    })
   }
 
   Router.$inject = ["$stateProvider", "$urlRouterProvider"];
@@ -44807,8 +44821,7 @@ function EventsController(Event, $state) {
 
   this.select = function select(event) {
     $state.go("showEvent");
-    this.selected = Event.get({ id: event._id });
-    // console.log(this.selected);
+    this.selected = Event.get($state.params);
   }
 
   this.deselect = function deselect() {
@@ -44816,25 +44829,14 @@ function EventsController(Event, $state) {
   }
 
   this.save = function newEvent() {
-    Event.save(self.new, function(event) {
-      self.all.push(event);
-      console.log(event);
-      self.new = {};
+    Event.save(self.new, function() {
       $state.go("eventsIndex");
     });
   }
 
   this.update = function updateEvent() {
-    console.log(self.selected);
-    self.selected.$update(function(updatedEvent) {
-      var index = self.all.findIndex(function(event) {
-        return event._id === updatedEvent._id;
-      });
-
-      self.all.splice(index, 1, updatedEvent);
-      self.selected = null;
-    }, function(err) {
-      console.log(err);
+    self.selected.$update(function() {
+      $state.go("showEvent", $state.params);
     });
   }
 
@@ -44852,8 +44854,8 @@ angular
   .module("LdnBeerApp")
   .controller("LoginController", LoginController);
 
-LoginController.$inject = ["User", "$state", "$rootScope"];
-function LoginController(User, $state, $rootScope) {
+LoginController.$inject = ["User", "$state", "$rootScope", "$auth"];
+function LoginController(User, $state, $rootScope, $auth) {
 
   var self = this;
 
@@ -44869,6 +44871,16 @@ function LoginController(User, $state, $rootScope) {
       });
     }
   }
+
+  this.authenticate = function(provider) {
+    $auth.authenticate(provider)
+      .then(function() {
+        self.currentUser = $auth.getPayload();
+      });
+  }
+
+  this.currentUser = $auth.getPayload();
+
 }
 angular
   .module("LdnBeerApp")
@@ -44896,26 +44908,26 @@ angular
   .module("LdnBeerApp")
   .controller("CurrentUserController", CurrentUserController);
 
-CurrentUserController.$inject = ["TokenService", "$state", "$rootScope"];
-function CurrentUserController(TokenService, $state, $rootScope) {
+CurrentUserController.$inject = ["$state", "$rootScope", "$auth", "$window"];
+function CurrentUserController($state, $rootScope, $auth, $window) {
+
   var self = this;
-
-  this.currentUser = TokenService.decodeToken();
-
-  this.logout = function logout() {
-    TokenService.clearToken();
-    this.currentUser = null;
-    $state.go("home");
-  }
+  this.currentUser = $auth.getPayload();
 
   $rootScope.$on("loggedIn", function() {
-    self.currentUser = TokenService.decodeToken();
+    self.currentUser = $auth.getPayload();
   });
 
   $rootScope.$on("unauthorized", function() {
     $state.go("login");
     self.errorMessage = "Please log in.";
   });
+
+  this.logout = function logout() {
+    $auth.logout();
+    this.currentUser = null;
+    $state.go("home");
+  }
 }
 angular 
   .module('LdnBeerApp')

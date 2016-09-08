@@ -3,7 +3,9 @@ var jwt = require('jsonwebtoken');
 var secret = require('../config/tokens').secret;
 
 var eventsController = require('../controllers/events');
-var authController = require('../controllers/authentications');
+// var authController = require('../controllers/authentications');
+var facebookController = require('../controllers/facebookOauth');
+var twitterController = require('../controllers/twitterOauth');
 
 function secureRoute(req, res, next) {
   if(!req.headers.authorization) return res.status(401).json({ message: 'Please log in before accessing this resource'});
@@ -33,7 +35,9 @@ router.route('/events/:id')
   .delete(secureRoute)
   .delete(eventsController.delete);
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+// router.post('/register', authController.register);
+// router.post('/login', authController.login);
+router.post('/oauth/facebook', facebookController.login);
+router.post('/oauth/twitter', twitterController.login);
 
 module.exports = router;
