@@ -44862,15 +44862,14 @@ function LoginController(User, $state, $rootScope, $auth) {
   this.credentials = {};
 
   this.submit = function submit() {
-    if(this.form.$valid) {
-      User.login(this.credentials, function(res) {
-        $rootScope.$broadcast("loggedIn");
-        $state.go("home");
-
-        self.form.$setUntouched();
-      });
-    }
+    $auth.login(this.credentials, {
+      url: "/api/login"
+    }).then(function() {
+      $state.go("eventsIndex");
+      $rootScope.$broadcast("loggedIn");
+    });
   }
+
 
   this.authenticate = function(provider) {
     $auth.authenticate(provider)
@@ -44893,15 +44892,14 @@ function RegisterController(User, $state, $rootScope) {
 
   this.user = {};
 
-  this.submit = function() {
-    if (this.form.$valid) {
-      User.register(this.user, function(res) {
-        $rootScope.$broadcast("loggedIn");
-        $state.go("home");
 
-      self.form.$setUntouched();
-      });
-    }
+  this.submit = function submit() {
+    $auth.signup(this.user, {
+      url: "/api/register"
+    }).then(function() {
+      $state.go("eventsIndex");
+      $rootScope.$broadcast("loggedIn");
+    });
   }
 }
 angular

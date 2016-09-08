@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var secret = require('../config/tokens').secret;
 
 var eventsController = require('../controllers/events');
-// var authController = require('../controllers/authentications');
+var authController = require('../controllers/authentications');
 var facebookController = require('../controllers/facebookOauth');
 var twitterController = require('../controllers/twitterOauth');
 
@@ -23,20 +23,16 @@ function secureRoute(req, res, next) {
 
 router.route('/events')
   .get(eventsController.index)
-  .post(secureRoute)
-  .post(eventsController.create);
+  .post(secureRoute, eventsController.create);
 
 router.route('/events/:id')
   .get(eventsController.show)
-  .put(secureRoute)
-  .put(eventsController.update)
-  .patch(secureRoute)
-  .patch(eventsController.update)
-  .delete(secureRoute)
-  .delete(eventsController.delete);
+  .put(secureRoute, eventsController.update)
+  .patch(secureRoute, eventsController.update)
+  .delete(secureRoute, eventsController.delete);
 
-// router.post('/register', authController.register);
-// router.post('/login', authController.login);
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 router.post('/oauth/facebook', facebookController.login);
 router.post('/oauth/twitter', twitterController.login);
 
