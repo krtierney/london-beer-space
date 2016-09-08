@@ -24,6 +24,9 @@ function eventShow(req, res) {
 
 function eventUpdate(req, res) {
   Event.findByIdAndUpdate(req.params.id, req.body, {
+
+    // secure route to only allow user who created it?
+    // if(req.user._id !== event.user) res.send(401)
     new: true, runValidators: true }, function(err, event) {
       if(err) return res.status(400).json(err);
       return res.status(200).json(event);

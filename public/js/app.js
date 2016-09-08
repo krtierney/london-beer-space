@@ -1,7 +1,8 @@
 angular
-  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages'])
+  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer'])
   .constant("API_URL", "http://localhost:3000/api")
   .config(setupInterceptors)
+  .config(oAuthConfig)
   .config(Router);
 
   setupInterceptors.$inject = ["$httpProvider"];
@@ -9,12 +10,26 @@ angular
     $httpProvider.interceptors.push("AuthInterceptor");
   }
 
+  oAuthConfig.$inject = ["$authProvider"];
+  function oAuthConfig($authProvider) {
+    $authProvider.facebook({
+      url: '/api/oauth/facebook',
+      clientId: "349428735446661"
+    });
+
+    $authProvider.twitter({
+      url: '/api/oauth/twitter',
+      clientId: "YjSOxNEdFNfHixvgyqpCcIzle"
+    })
+  }
+
   Router.$inject = ["$stateProvider", "$urlRouterProvider"];
   function Router($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state("home", {
         url: "/",
-        templateUrl: "templates/home.html"
+        templateUrl: "templates/home.html",
+        controller: "EventsController as events"
       })
       .state("login", {
         url: "/login",
@@ -28,19 +43,23 @@ angular
       })
       .state("eventsIndex", {
         url: "/events",
-        templateUrl: "templates/events/index.html"
+        templateUrl: "templates/events/index.html", 
+        controller: "EventsController as events"
       })
       .state("createEvent", {
         url: "/events/new",
-        templateUrl: "templates/events/create.html"
-      })
-      .state("updateEvent", {
-        url: "/events/:id/update",
-        templateUrl: "templates/events/update.html"
+        templateUrl: "templates/events/create.html",
+        controller: "CreateEventsController as createEvent"
       })
       .state("showEvent", {
         url: "/events/:id",
-        templateUrl: "templates/events/show.html"
+        templateUrl: "templates/events/show.html",
+        controller: "ShowEventsController as showEvent"
+      })
+      .state("updateEvent", {
+        url: "/events/:id/update",
+        templateUrl: "templates/events/update.html",
+        controller: "UpdateEventsController as updateEvent"
       });
 
       $urlRouterProvider.otherwise("/");
@@ -44801,13 +44820,11 @@ function EventsController(Event, $state) {
 
   this.all = Event.query();
 
-  this.selected = null;
-
   this.new = {};
 
   this.select = function select(event) {
-    $state.go("showEvent");
     console.log($state.params);
+    $state.go("showEvent");
     this.selected = Event.get($state.params);
   }
 
@@ -44841,70 +44858,73 @@ angular
   .module("LdnBeerApp")
   .controller("LoginController", LoginController);
 
-LoginController.$inject = ["User", "$state", "$rootScope"];
-function LoginController(User, $state, $rootScope) {
-
-  var self = this;
-
+LoginController.$inject = ["$state", "$rootScope", "$auth"];
+function LoginController($state, $rootScope, $auth) {
+  
   this.credentials = {};
 
-  this.submit = function submit() {
-    if(this.form.$valid) {
-      User.login(this.credentials, function(res) {
-        $rootScope.$broadcast("loggedIn");
-        $state.go("home");
+  this.submit = function() {
+    $auth.login(this.credentials, {
+      url: "/api/login"
+    }).then(function() {
+      $rootScope.$broadcast("loggedIn");
+      $state.go("eventsIndex");
+    });
+  }
 
-        self.form.$setUntouched();
+
+  this.authenticate = function(provider) {
+    $auth.authenticate(provider)
+      .then(function() {
+        $rootScope.$broadcast("loggedIn");
+        $state.go("eventsIndex");
       });
-    }
   }
 }
 angular
   .module("LdnBeerApp")
   .controller("RegisterController", RegisterController);
 
-RegisterController.$inject = ["User", "$state", "$rootScope"];
-function RegisterController(User, $state, $rootScope) {
-
-  var self = this;
+RegisterController.$inject = ["$state", "$rootScope"];
+function RegisterController($state, $rootScope) {
 
   this.user = {};
 
-  this.submit = function() {
-    if (this.form.$valid) {
-      User.register(this.user, function(res) {
-        $rootScope.$broadcast("loggedIn");
-        $state.go("home");
 
-      self.form.$setUntouched();
-      });
-    }
+  this.submit = function submit() {
+    $auth.signup(this.user, {
+      url: "/api/register"
+    })
+    .then(function() {
+      $state.go("eventsIndex");
+      $rootScope.$broadcast("loggedIn");
+    });
   }
 }
 angular
   .module("LdnBeerApp")
   .controller("CurrentUserController", CurrentUserController);
 
-CurrentUserController.$inject = ["TokenService", "$state", "$rootScope"];
-function CurrentUserController(TokenService, $state, $rootScope) {
+CurrentUserController.$inject = ["$state", "$rootScope", "$auth", "$window"];
+function CurrentUserController($state, $rootScope, $auth, $window) {
+
   var self = this;
-
-  this.currentUser = TokenService.decodeToken();
-
-  this.logout = function logout() {
-    TokenService.clearToken();
-    this.currentUser = null;
-    $state.go("home");
-  }
+  this.currentUser = $auth.getPayload();
 
   $rootScope.$on("loggedIn", function() {
-    self.currentUser = TokenService.decodeToken();
+    self.currentUser = $auth.getPayload();
   });
 
   $rootScope.$on("unauthorized", function() {
     $state.go("login");
     self.errorMessage = "Please log in.";
   });
+
+  this.logout = function() {
+    $auth.logout();
+    this.currentUser = null;
+    $state.go("home");
+  }
 }
 angular 
   .module('LdnBeerApp')
@@ -45047,5 +45067,47 @@ function TokenService($window, jwtHelper) {
 
   this.clearToken = function clearToken() {
     return $window.localStorage.removeItem('token');
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("CreateEventsController", CreateEventsController);
+
+CreateEventsController.$inject = ["Event", "$state"];
+function CreateEventsController(Event, $state) {
+  this.new = {};
+
+  this.save = function() {
+    Event.save(this.new, function() {
+      $state.go('eventsIndex');
+    });
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("ShowEventsController", ShowEventsController);
+
+ShowEventsController.$inject = ["Event", "$state"];
+function ShowEventsController(Event, $state) {
+  this.selected = Event.get($state.params);
+
+  this.delete = function deleteEvent() {
+    this.selected.$delete(function() {
+      $state.go("eventsIndex");
+    });
+  }
+}
+angular
+  .module("LdnBeerApp")
+  .controller("UpdateEventsController", UpdateEventsController);
+
+UpdateEventsController.$inject = ["Event", "$state"];
+function UpdateEventsController(Event, $state) {
+  this.selected = Event.get($state.params);
+
+  this.update = function updateEvent() {
+    this.selected.$update(function() {
+      $state.go("showEvent", $state.params);
+    });
   }
 }

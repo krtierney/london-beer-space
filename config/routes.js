@@ -4,6 +4,8 @@ var secret = require('../config/tokens').secret;
 
 var eventsController = require('../controllers/events');
 var authController = require('../controllers/authentications');
+var facebookController = require('../controllers/facebookOauth');
+var twitterController = require('../controllers/twitterOauth');
 
 var upload = require('./upload');
 
@@ -29,10 +31,12 @@ router.route('/events/:id')
   .get(eventsController.show)
   .put(secureRoute, upload.single('image'), eventsController.update)
   .patch(secureRoute, upload.single('image'), eventsController.update)
-  .delete(secureRoute)
-  .delete(eventsController.delete);
+  .delete(secureRoute, eventsController.delete);
+  .post(secureRoute, upload.single('image'),eventsController.create);
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/oauth/facebook', facebookController.login);
+router.post('/oauth/twitter', twitterController.login);
 
 module.exports = router;

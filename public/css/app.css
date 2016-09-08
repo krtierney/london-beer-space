@@ -4,3 +4,8 @@
 
 .odd {
   background: #cccccc; }
+
+button.login {
+  margin: 2rem;
+  max-width: 200px;
+  display: inline-block; }

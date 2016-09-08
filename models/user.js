@@ -2,11 +2,14 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt');
 
 var userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  email: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true }, 
+  isAdmin: Boolean,
+  username: { type: String, unique: true },
+  email: { type: String, unique: true },
+  passwordHash: { type: String }, 
   bio: { type: String },
-  image: { type: String }
+  avatar: { type: String },
+  facebookID: Number,
+  twitterID: Number
 });
 
 userSchema.set('toJSON', {

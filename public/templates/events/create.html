@@ -1,18 +1,18 @@
 <h1>Add An Event</h1>
 
-<form ng-submit="events.save()" name="newEvent.form" novalidate>
+<form ng-submit="createEvent.save()" name="newEvent.form" novalidate>
 
   <div class="form-group">
     <label for="title">Title:</label>
     <div>
-      <input type="text" name="title" ng-model="events.new.title" placeholder="Title" required>
+      <input type="text" name="title" ng-model="createEvent.new.title" placeholder="Title" required>
     </div>
   </div>
 
   <div class="form-group">
     <label for="description">Description:</label>
     <div>
-      <input type="textarea" name="description" ng-model="events.new.description" placeholder="Description" required>
+      <input type="textarea" name="description" ng-model="createEvent.new.description" placeholder="Description" required>
     </div>
   </div>
 
@@ -20,28 +20,32 @@
     <label for="date">Date:</label>
     <div>
       <!-- Set this up as a date/time picker -->
-      <input type="datetime-local" date name="date" ng-model="events.new.date" required>
+      <input type="datetime-local" date name="date" ng-model="createEvent.new.date" required>
     </div>
   </div>
 
   <div class="form-group">
     <label for="location">Location:</label>
     <div>
-      <input type="text" name="location" ng-model="events.new.location" placeholder="Location" required>
+      <input type="text" name="location" ng-model="createEvent.new.location" placeholder="Location" required>
     </div>
   </div>
 
   <div class="form-group">
     <label for="image">Image:</label>
     <div>
+<<<<<<< HEAD
       <input type="file" file name="image" ng-model="events.new.image" placeholder="image link (optional)">
+=======
+      <input type="text" name="image" ng-model="createEvent.new.image" placeholder="image link (optional)">
+>>>>>>> master
     </div>
   </div>
 
   <div class="form-group">
     <label for="registrationUrl">Registration:</label>
     <div>
-      <input type="text" name="registrationUrl" ng-model="events.new.registrationUrl" placeholder="Register or RSVP link (optional)">
+      <input type="text" name="registrationUrl" ng-model="createEvent.new.registrationUrl" placeholder="Register or RSVP link (optional)">
     </div>
   </div>
 
