@@ -1,6 +1,6 @@
 <h1>Update An Event</h1>
 
-<form class="form-horizontal" ng-submit="events.update()" name="editEvent.form" novalidate>
+<form ng-submit="events.update()" name="editEvent.form" novalidate>
 
   <div class="form-group">
     <label class="control-label col-sm-2" for="title">Title:</label>
@@ -48,7 +48,8 @@
   <!-- Add checkbox selectors for various types of events (will require a new data model in the API, probably?) -->
   <!-- <input type="checkboxes" name="type" ng-model="events.selected.types"> -->
 
-  <input type="submit" class="btn btn-primary" value="Submit">
+  <button class="btn btn-primary">Submit</button>
+  <button type="button" class="btn btn-danger" ui-sref="showEvent({ id: updateEvent.selected._id })">Cancel</button>
 
 
 </form>
