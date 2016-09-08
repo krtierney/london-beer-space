@@ -3,6 +3,7 @@ var app = express();
 
 var environment = app.get('env');
 var mongoose = require('mongoose');
+var bluebird = require('bluebird');
 var bodyParser = require('body-parser');
 var cors = require('cors');
 var beautifulUnique = require('mongoose-beautiful-unique-validation');
@@ -11,6 +12,7 @@ var port = process.env.PORT || 3000;
 var routes = require('./config/routes');
 var databaseUri = require('./config/db')(environment);
 
+mongoose.Promise = bluebird;
 mongoose.connect(databaseUri);
 mongoose.plugin(beautifulUnique);
 

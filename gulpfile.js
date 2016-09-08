@@ -5,6 +5,10 @@ var concat = require('gulp-concat');
 var sass = require('gulp-sass');
 var livereload = require('gulp-livereload');
 var runSequence = require('run-sequence');
+var uglify = require('gulp-uglify');
+var rename = require('gulp-rename');
+var cleanCSS = require('gulp-clean-css');
+var replace = require('gulp-replace');
 
 gulp.task('bower', function() {
   var jsFilter = filter('**/*.js', { restore: true });
@@ -32,10 +36,54 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('default', function() {
+gulp.task('copy', function() {
+  gulp.src('lib/templates/**/*')
+    .pipe(gulp.dest('public/templates/'))
+  gulp.src('lib/index.html')
+    .pipe(gulp.dest('public/'));
+});
+
+gulp.task('compress', function() {
+  gulp.src('public/js/app.js')
+    .pipe(uglify())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest('public/js'))
+});
+
+gulp.task('minify-css', function() {
+  gulp.src('public/css/app.css')
+    .pipe(cleanCSS())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(gulp.dest('public/css'))
+});
+
+gulp.task('replace:prod', function() {
+  gulp.src('public/index.html')
+    .pipe(replace('app.js', 'app.min.js'))
+    .pipe(replace('app.css', 'app.min.css'))
+    .pipe(gulp.dest('public/'));
+});
+
+gulp.task('replace:dev', function() {
+  gulp.src('public/index.html')
+    .pipe(replace('app.min.js', 'app.js'))
+    .pipe(replace('app.min.css', 'app.css'))
+    .pipe(gulp.dest('public/'));
+});
+
+gulp.task('build', function() {
+  runSequence(['bower', 'sass', 'concat', 'compress', 'minify-css', 'replace:prod'], function() {
+    livereload.reload('public/index.html');
+  });
+});
+
+gulp.task('default', ['bower', 'sass', 'concat', 'copy', 'replace:dev'], function() {
+  
   livereload.listen();
 
-  gulp.watch(['lib/**/*', 'public/index.html', 'public/templates/*'], function() {
+  gulp.watch(['lib/templates/**/*','lib/index.html'], ['copy']);
+
+  gulp.watch(['lib/js/**/*', 'lib/scss/**/*'], function() {
     runSequence(['concat', 'sass'], function() {
       livereload.reload('public/index.html');
     });
@@ -46,4 +94,5 @@ gulp.task('default', function() {
       livereload.reload('public/index.html');
     });
   });
+
 });
