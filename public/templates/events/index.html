@@ -1,6 +1,8 @@
 <h1>Event Index</h1>
 
-<ul ng-repeat="event in events.all" ng-class="$even ? 'even' : 'odd'">
+<ul class="index-list" ng-repeat="event in events.all" ng-class="$even ? 'even' : 'odd'">
+  <img class="img-responsive pull-left img-circle event-thumb" ng-src="{{ event.image }}" alt="event image">
+
   <h2 ui-sref="showEvent({ id: event._id })">{{ event.title }}</h2>
   <p>{{ event.location }}</p>
   <p>{{ event.date | date: 'MM/dd/yyyy' }}</p>

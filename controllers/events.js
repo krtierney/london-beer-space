@@ -12,6 +12,9 @@ function eventIndex(req, res) {
 }
 
 function eventCreate(req, res) {
+
+  if(req.file) req.body.image = req.file.key;
+
   Event.create(req.body)
     .then(function(event) {
       return Event.findById(event._id);
@@ -20,28 +23,34 @@ function eventCreate(req, res) {
       res.status(201).json(event);
     })
     .catch(function(err) {
-      res.status(500).json(err);
+      if(err.name && err.name === "ValidationError") {
+        res.status(400).json(err);
+      } else {
+        console.log("eventCreateError: ", err);
+        res.status(500).json(err);
+      }
     });
 }
 
 function eventShow(req, res) {
   Event.findById(req.params.id)
     .then(function(event) {
+      if(!event) res.status(404).json({ message: "Sorry, that event couldn't be found" });
       res.status(200).json(event);
     })
     .catch(function(err) {
-      res.status(500).json(err);
-      // Will this work?
-      res.status(404).json({ message: "Sorry, that event couldn't be found" });
+      res.status(500).json(err);      
     });
 }
 
 function eventUpdate(req, res) {
+
+  if(req.file) req.body.image = req.file.key;
+
   Event.findById(req.params.id)
     .then(function(event) {
       // if (req.user._id !== event.user) res.send(401)
       for(key in req.body) event[key] = req.body[key];
-        // how to insert runValidators: true in here?
       return event.save();
     })
     .then(function(event) {
@@ -52,8 +61,12 @@ function eventUpdate(req, res) {
     })
     .catch(function(err) {
       console.log(err);
-      // should this be a 400 error?
-      res.status(500).json(err);
+      if(err.name && err.name === "ValidationError") {
+        res.status(400).json(err);
+      } else {
+        console.log("eventUpdateError: ", err);
+        res.status(500).json(err);
+      }
     });
 }
 

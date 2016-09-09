@@ -227,8 +227,7 @@ function Event($resource, formData) {
       method: "PATCH",
       headers: { 'Content-Type': undefined },
       transformRequest: formData.transform
-    },
-    delete: { method: "DELETE" }
+    }
   });
 }
 angular
