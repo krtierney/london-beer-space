@@ -44134,7 +44134,6 @@ angular.module('angular-jwt.options', [])
     return ng1;
 
 }));
-//# sourceMappingURL=satellizer.js.map
 
 /*
  * angular-ui-bootstrap
