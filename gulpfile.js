@@ -36,13 +36,6 @@ gulp.task('sass', function() {
     .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('copy', function() {
-  gulp.src('lib/templates/**/*')
-    .pipe(gulp.dest('public/templates/'))
-  gulp.src('lib/index.html')
-    .pipe(gulp.dest('public/'));
-});
-
 gulp.task('compress', function() {
   gulp.src('public/js/app.js')
     .pipe(uglify())
@@ -61,14 +54,14 @@ gulp.task('replace:prod', function() {
   gulp.src('public/index.html')
     .pipe(replace('app.js', 'app.min.js'))
     .pipe(replace('app.css', 'app.min.css'))
-    .pipe(gulp.dest('public/'));
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('replace:dev', function() {
   gulp.src('public/index.html')
     .pipe(replace('app.min.js', 'app.js'))
     .pipe(replace('app.min.css', 'app.css'))
-    .pipe(gulp.dest('public/'));
+    .pipe(gulp.dest('public'));
 });
 
 gulp.task('build', function() {
@@ -77,15 +70,9 @@ gulp.task('build', function() {
   });
 });
 
-gulp.task('default', ['bower', 'sass', 'concat', 'copy', 'replace:dev'], function() {
+gulp.task('default', ['bower', 'sass', 'concat', 'replace:dev'], function() {
   
   livereload.listen();
-
-  gulp.watch(['lib/templates/**/*','lib/index.html'], function() {
-      runSequence(['copy'], function() {
-        livereload.reload('public/index.html');
-      });
-    });
 
   gulp.watch(['lib/js/**/*', 'lib/scss/**/*'], function() {
     runSequence(['concat', 'sass'], function() {

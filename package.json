@@ -23,10 +23,10 @@
     "morgan": "^1.7.0",
     "multer": "^1.2.0",
     "multer-s3": "^2.3.2",
-    "uuid": "^2.0.2",
     "qs": "^6.2.1",
     "request": "^2.74.0",
-    "request-promise": "^4.1.1"
+    "request-promise": "^4.1.1",
+    "uuid": "^2.0.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",

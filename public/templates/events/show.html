@@ -2,7 +2,7 @@
 
 <div ng-resource="event in events">
   <h2>{{ showEvent.selected.title }}</h2>
-  <h3>{{ showEvent.selected.date }}</h3>
+  <h3>{{ showEvent.selected.date | date: 'dd-MM-yyyy' }}</h3>
   <p>{{ showEvent.selected.description }} </p>
   <p>{{ showEvent.selected.location }} </p>
 

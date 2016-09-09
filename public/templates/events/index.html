@@ -3,5 +3,5 @@
 <ul ng-repeat="event in events.all" ng-class="$even ? 'even' : 'odd'">
   <h2 ui-sref="showEvent({ id: event._id })">{{ event.title }}</h2>
   <p>{{ event.location }}</p>
-  <p>{{ event.date }}</p>
+  <p>{{ event.date | date: 'MM/dd/yyyy' }}</p>
 </ul>
