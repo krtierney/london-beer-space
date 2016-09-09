@@ -20,13 +20,18 @@ User.create([
 
   Event.create([
     {
-      title: "An Event",
-      description: "description of an event",
-      date: new Date(2016-09-23),
-      location: "somewhere in London basically",
-      image: "https://media.timeout.com/images/67938/image.jpg"
-    },
-    {
+      title: "AlphaBet BrewCo Tap Takeover",
+      description: "The fab folks from Alphabet Brewing Company will be at The Rake on Wednesday 28th September. Drink some beer, meet the brewers, win some swag!",
+      date: new Date(2016-09-28),
+      location: "14 Winchester Walk, Borough Market SE1 9AG",
+      image: "https://scontent-lhr3-1.xx.fbcdn.net/t31.0-8/14257467_1390326970995916_5978730891816202975_o.jpg"
+    }, {
+      title: "One Mile End Tap Takeover",
+      description: "The fab folks from One Mile End will be at The Rake on Wednesday 28th September. Drink some beer, meet the brewers, win some swag!",
+      date: new Date(2016-09-28),
+      location: "14 Winchester Walk, Borough Market SE1 9AG",
+      image: "https://scontent-lhr3-1.xx.fbcdn.net/t31.0-8/14047131_1376803209014959_5698050951920148559_o.jpg"
+    }, {
       title: "Toast Ale Brew Day",
       description: "Head down to Temple Brew House to witness the making of a special beer called Toast Ale. The recipe combines surplus fresh bread (that would otherwise go to waste) with malted barley, hops, yeast and water. All Toast's profits go to Feedback, an environmental organisation that campaigns to end food waste. Anyone with a ticket who joins us on the day can collect a voucher and return two weeks later on the 5th October to claim a free glass of Toast Ale from the bar! Brewer Vanesa will be around to chat (when she's not making beer!) and Julie from Toast will be on hand to share Toast's story and spread the rev-ale-lution. Let's toast the end of food waste!",
       date: new Date(2016-09-21),
