@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var Event = require('../models/event');
 var User = require('../models/user');
 
-var databaseUri = require('../config/db')('development');
+var databaseUri = require('../config/db')(proceess.env.NODE_ENV || 'development');
 mongoose.connect(databaseUri);
 
 User.collection.drop();
