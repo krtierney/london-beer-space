@@ -1,55 +1,55 @@
-<h1>Add An Event</h1>
+<div class="container">
+  <h1 class="text-center">Add An Event</h1>
 
-<form ng-submit="createEvent.save()" name="newEvent.form" novalidate>
+  <form ng-submit="createEvent.save()" name="newEvent.form" novalidate>
 
-  <div class="form-group">
-    <label for="title">Title:</label>
-    <div>
-      <input type="text" name="title" ng-model="createEvent.new.title" placeholder="Title" required>
+    <div class="form-group">
+      <label for="title">Title:</label>
+      <div>
+        <input class="form-control" type="text" name="title" ng-model="createEvent.new.title" placeholder="Title" required>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="description">Description:</label>
-    <div>
-      <input type="textarea" name="description" ng-model="createEvent.new.description" placeholder="Description" required>
+    <div class="form-group">
+      <label for="description">Description:</label>
+      <div>
+        <textarea class="form-control" rows="5" type="text" name="description" ng-model="createEvent.new.description" placeholder="Description" required></textarea>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="date">Date:</label>
-    <div>
-      <!-- Set this up as a date/time picker -->
-      <input type="datetime-local" date name="date" ng-model="createEvent.new.date" required>
+    <div class="form-group">
+      <label for="date">Date:</label>
+      <div>
+        <!-- Set this up as a date/time picker -->
+        <input class="form-control" type="datetime-local" date name="date" ng-model="createEvent.new.date" required>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="location">Location:</label>
-    <div>
-      <input type="text" name="location" ng-model="createEvent.new.location" placeholder="Location" required>
+    <div class="form-group">
+      <label for="location">Location:</label>
+      <div>
+        <input class="form-control" type="text" name="location" ng-model="createEvent.new.location" placeholder="Location" required>
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="image">Image:</label>
-    <div>
-      <input type="file" file name="image" ng-model="createEvent.new.image" placeholder="image link (optional)">
+    <div class="form-group">
+      <label for="image">Image:</label>
+      <div>
+        <input class="form-control" type="file" file name="image" ng-model="createEvent.new.image" placeholder="image link (optional)">
+      </div>
     </div>
-  </div>
 
-  <div class="form-group">
-    <label for="registrationUrl">Registration:</label>
-    <div>
-      <input type="text" name="registrationUrl" ng-model="createEvent.new.registrationUrl" placeholder="Register or RSVP link (optional)">
+    <div class="form-group">
+      <label for="registrationUrl">Registration:</label>
+      <div>
+        <input class="form-control" type="text" name="registrationUrl" ng-model="createEvent.new.registrationUrl" placeholder="Register or RSVP link (optional)">
+      </div>
     </div>
-  </div>
 
-  <!-- Add checkbox selectors for various types of events (will require a new data model in the API, probably?) -->
-  <!-- <input type="checkboxes" name="type" ng-model="events.new.types"> -->
-
-  <input type="submit" class="btn btn-primary" value="Submit">
-
-
-</form>
-
+    <!-- Add checkbox selectors for various types of events (will require a new data model in the API, probably?) -->
+    <!-- <input type="checkboxes" name="type" ng-model="events.new.types"> -->
+    <div class="text-center">
+      <input type="submit" class="btn btn-primary" value="Submit">
+    </div>
+  </form>
+</div>

@@ -31,7 +31,8 @@ gulp.task('concat', function() {
 });
 
 gulp.task('sass', function() {
-  gulp.src('lib/scss/app.scss')
+  gulp.src('lib/scss/*.scss')
+    .pipe(concat('app.scss'))
     .pipe(sass())
     .pipe(gulp.dest('public/css'));
 });
