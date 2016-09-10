@@ -22,6 +22,27 @@
       <div>
         <!-- Set this up as a date/time picker -->
         <input class="form-control" type="datetime-local" date name="date" ng-model="createEvent.new.date" required>
+        <datetimepicker ng-model="createEvent.new.date"
+        hour-step="hourStep" 
+        minute-step="minuteStep"
+        ng-model="date" 
+        show-meridian="showMeridian" 
+        date-format="{{format}}" 
+        date-options="dateOptions"
+        date-disabled="disabled(date, mode)" 
+        datepicker-append-to-body="false"
+        readonly-date="false"
+        disabled-date="false"
+        hidden-time="false"
+        hidden-date="false" 
+        name="datetimepicker"
+        show-spinners="true"
+        readonly-time="false"
+        date-opened="dateOpened"
+        show-button-bar="false"
+        >
+        <!-- Use date-ng-click="open($event, opened)" to override date ng-click -->
+        </datetimepicker>
       </div>
     </div>
 
