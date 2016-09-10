@@ -13,9 +13,9 @@
 
 <body ng-controller="CurrentUserController as user">
   <header>
-    <nav class="nav navbar-light bg-faded">
-      <h1><a ui-sref="home">London Beer Space</a></h1>
-      <ul class="nav navbar-nav">
+    <nav class="nav bg-faded navbar-fixed-top">
+      
+      <ul class="nav navbar-nav pull-right">
         <li class="nav-item" ui-sref-active="active" ng-if="!user.currentUser">
           <a class="nav-link" ui-sref="login">Log In</a>
         </li>
@@ -32,6 +32,7 @@
           <a class="nav-link" href="#" ng-click="user.logout()">Log Out</a>
         </li>
       </ul>
+      <h1><a ui-sref="home"><img ng-src="../assets/head.svg" alt="London Beer Space" class="title"></a></h1>
     </nav>
   </header>
   <div class="container" ng-if="main.errorMessage">
