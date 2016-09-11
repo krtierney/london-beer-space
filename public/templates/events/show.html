@@ -1,5 +1,5 @@
 <h1>Event Show</h1>
-<img class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image">
+<img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
 
 <div ng-resource="event in events">
   <h2>{{ showEvent.selected.title }}</h2>
