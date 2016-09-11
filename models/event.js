@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 var s3 = require('../config/s3');
 
 var eventSchema = new mongoose.Schema({
-  title: { type: String },
-  description: { type: String },
-  date: { type: Date },
-  location: { type: String },
+  title: { type: String, required: true, unique: true },
+  description: { type: String, required: true },
+  date: { type: Date, required: true },
+  location: { type: String, required: true },
   image: { type: String }, 
   registrationUrl: { type: String },
   type: { type: String }

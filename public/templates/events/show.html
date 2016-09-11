@@ -1,11 +1,10 @@
-<h1>Event Show</h1>
 <img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
 
 <div ng-resource="event in events">
-  <h2>{{ showEvent.selected.title }}</h2>
-  <h3>{{ showEvent.selected.date | date: 'dd MMMM yyyy' }}</h3>
+  <h1>{{ showEvent.selected.title }}</h1>
+  <h4>{{ showEvent.selected.date | date: 'EEEE, dd MMMM yyyy, h:mm a' }}</h4>
   <p>{{ showEvent.selected.description }} </p>
-  <p>{{ showEvent.selected.location }} </p>
+  <h5>{{ showEvent.selected.location }} </h5>
 
   <a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
 

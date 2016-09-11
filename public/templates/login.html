@@ -27,11 +27,11 @@
 
     <!-- Figure out bootstrap styles for form errors -->
     <form ng-submit="login.submit()" name="login.form" novalidate>
-    <div class="form-group">
+    <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="email" name="email" id="email" ng-model="login.credentials.email" placeholder="Enter email" ng-focus="login.form.email.$setUntouched()" required>
       </div>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="password" name="password" id="password" ng-model="login.credentials.password" placeholder="Enter password" ng-focus="login.form.password.$setUntouched()" required>
     </div>
 

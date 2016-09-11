@@ -1,7 +1,5 @@
-<h1>Event Index</h1>
-
 <ul class="index-list" ng-repeat="event in events.all" ng-class="$even ? 'even' : 'odd'">
   <h2 ui-sref="showEvent({ id: event._id })">{{ event.title }}</h2>
   <p>{{ event.location }}</p>
-  <p>{{ event.date | date: 'dd MMMM yyyy' }}</p>
+  <p>{{ event.date | date: 'EEEE, dd MMMM yyyy, h:mm a' }}</p>
 </ul>

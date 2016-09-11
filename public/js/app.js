@@ -1,5 +1,5 @@
 angular
-  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker'])
+  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
   .config(oAuthConfig)
   .config(Router);
 
@@ -135,8 +135,8 @@ angular
   .module("LdnBeerApp")
   .controller("RegisterController", RegisterController);
 
-RegisterController.$inject = ["$state", "$rootScope"];
-function RegisterController($state, $rootScope) {
+RegisterController.$inject = ["$state", "$rootScope", "$auth"];
+function RegisterController($state, $rootScope, $auth) {
 
   this.user = {};
 
