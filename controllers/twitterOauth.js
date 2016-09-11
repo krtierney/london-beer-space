@@ -20,6 +20,7 @@ function login(req, res) {
         res.status(200).send(token);
       })
       .catch(function(err) {
+        console.log(err);
         res.status(500).json(err);
       });
 
@@ -74,6 +75,7 @@ function login(req, res) {
         res.status(200).json({ token: token });
       })
       .catch(function(err) {
+        console.log(err);
         res.status(500).json(err);
       });
   }
