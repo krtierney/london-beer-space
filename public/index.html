@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="/css/app.css">
 </head>
 
-<body ng-controller="CurrentUserController as user">
+<body sticky-footer ng-controller="CurrentUserController as user">
   <header>
     <nav class="nav bg-faded navbar-fixed-top">
       <!-- Change .hidden-xs to collapsible nav -->
@@ -39,5 +39,15 @@
     <div class="alert alert-danger">{{ user.errorMessage }}</div>
   </div>
   <main class="container" ui-view></main>
+  <footer class="footer" ng-style="footer">
+    <div class="container">
+    <ul>
+      <li class="inline">&copy; 2016</li>
+      <li class="inline">About</li>
+      <li class="inline">Contact</li>
+      <li class="inline">API</li>
+    </ul>
+    </div>
+  </footer>
 </body>
 </html>
