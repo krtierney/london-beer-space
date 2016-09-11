@@ -4,7 +4,7 @@ var bcrypt = require('bcrypt');
 var userSchema = new mongoose.Schema({
   isAdmin: Boolean,
   username: { type: String, unique: true },
-  email: { type: String, required: true, unique: true },
+  email: { type: String, unique: true },
   passwordHash: String, 
   bio: String,
   avatar: String,
@@ -21,9 +21,11 @@ var userSchema = new mongoose.Schema({
 // });
 
 userSchema.pre('validate', function(next) {
-  if(!this._password && (!this.facebookID || !this.twitterID)) {
-    this.invalidate('password', 'A password is required');
-  }
+  if(!this._password && !this.facebookID) {
+    if (!this._password && !this.twitterID) {
+      this.invalidate('password', 'A password is required');
+    }
+  } 
   next();
 });
 
