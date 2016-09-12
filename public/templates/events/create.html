@@ -44,7 +44,7 @@
     <div class="form-group">
       <label for="location">Location:</label>
       <div>
-        <input class="form-control" type="text" name="location" ng-model="createEvent.new.location" placeholder="Location" required>
+        <input class="form-control" autocomplete options="{ country: 'gb', watchEnter: true }" type="text" name="location" ng-model="createEvent.new.location" placeholder="Location" required>
       </div>
     </div>
 
