@@ -1,19 +1,28 @@
 $primary-color: rgba(0,152,196,1); 
+$secondary-color: #EB5E4B;
 
 body { 
   background: #FEFEFE;
-  padding-top: 150px; 
+  font-family: "Lato", "Helvetica Neue", sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  padding-top: 10em; 
+}
+
+ul.index-list {
+  min-height: 8em;
+  padding: 0.5% 2%;
 }
 
 .date-card {
-  display: inline-block;
-  float: left;
-  width: 6em;
+  width: 6.4em;
   padding: 1%;
-  margin: 1% 3% 1% 0;
   border: 1px solid $primary-color;
   border-radius: 5px;
   text-align: center;
+  vertical-align: middle;
+  display: inline-block;
+  float: left;
   .dd {
     font-size: 2em;
     line-height: 1em;
@@ -29,6 +38,26 @@ h1.event-title, h2.event-title {
   font-family: "balboa",sans-serif;
 }
 
+h2.event-title {
+  padding-left: 4em;
+  a {
+    color: inherit;
+    
+    &:hover {
+      text-decoration: none;
+    } 
+  }
+}
+
+.secondary-light {
+  color: lighten( $secondary-color, 20% );
+}
+
+p.location {
+  font-size: 1.2em;
+  padding-left: 6.3em;
+}
+
 .even { background: #f4f4f4; } 
 .odd { background: #cccccc; }
 
@@ -40,11 +69,6 @@ img.event-feature {
 img.event-thumb {
   max-height: 100px;
   padding-right: 10px;
-}
-
-ul.index-list {
-  min-height: 100px;
-  padding: 0.5% 2%;
 }
 
 .oauth-buttons {

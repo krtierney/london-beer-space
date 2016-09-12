@@ -44,12 +44,12 @@
   <main class="container" ui-view></main>
   <footer class="footer" ng-style="footer">
     <div class="container">
-    <ul>
-      <li class="inline">&copy; 2016</li>
-      <li class="inline">About</li>
-      <li class="inline">Contact</li>
-      <li class="inline hidden-xs">API</li>
-    </ul>
+      <ul class="list-inline">
+        <li>&copy; 2016</li>
+        <li><a href="#" ui-sref="about">About</a></li>
+        <li><a href="#" ui-sref="contact">Contact</a></li>
+        <li class="hidden-xs"><a href="#" ui-sref="publicAPI">API</a></li>
+      </ul>
     </div>
   </footer>
 </body>

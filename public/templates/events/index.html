@@ -1,6 +1,5 @@
 <ul class="index-list" ng-repeat="event in events.all" ng-class="$even ? 'even' : 'odd'">
-  <div class="date-card">{{ event.date | date: 'EEE' }}<br/><p class="dd">{{ event.date | date: 'dd' }}</p>{{ event.date | date: 'MMM' }}</div>
-  <h2 ui-sref="showEvent({ id: event._id })" class="event-title">{{ event.title }}</h2>
-  <p>{{ event.location }}</p>
-  <p>{{ event.date | date: 'EEEE, dd MMMM yyyy, h:mm a' }}</p>
+  <div class="date-card">{{ event.date | date: 'EEE' }}<br/><p class="dd">{{ event.date | date: 'dd' }}</p>{{ event.date | date: 'MMMM' }}</div>
+  <h2 class="event-title"><a href="#" class="index-link" ui-sref="showEvent({ id: event._id })">{{ event.title }}</a></h2>
+  <p class="location">{{ event.location }}</p>
 </ul>
