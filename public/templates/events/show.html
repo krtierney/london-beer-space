@@ -1,13 +1,17 @@
-<img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
+<div class="container" ng-controller="Calendar">
+  <img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
 
-<div ng-resource="event in events">
-  <h4 class="event-date secondary-light text-uppercase">{{ showEvent.selected.date | date: 'EEE dd MMMM yyyy, h:mm a' }}</h4>
+  <div ng-resource="event in events">
+    <h4 class="event-date secondary-light text-uppercase">{{ showEvent.selected.date | date: 'EEE dd MMMM yyyy, h:mm a' }}</h4>
 
-  <h1 class="event-title">{{ showEvent.selected.title }}</h1>
-  <p class="lead">{{ showEvent.selected.description }} </p>
-  <address>{{ showEvent.selected.location }} </address>
+    <h1 class="event-title">{{ showEvent.selected.title }}</h1>
+    <p class="lead">{{ showEvent.selected.description }} </p>
+    <address>{{ showEvent.selected.location }} </address>
 
-  <p><a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
+    <p><a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
 
-  <a href="#" ng-click="showEvent.delete()">Delete this event</a></p>
+    <a href="#" ng-click="showEvent.delete()">Delete this event</a></p>
+
+
+  </div>
 </div>

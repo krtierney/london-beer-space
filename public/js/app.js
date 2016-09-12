@@ -1,5 +1,5 @@
 angular
-  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
+  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors', 'ngCalendar'])
   .config(oAuthConfig)
   .config(Router);
 
@@ -464,6 +464,22 @@ function formData() {
 }
 
 
+angular.module('LdnBeerApp')
+  .controller('Calendar', function(Calendar) {
+    var calEvent = {
+      start: new Date(2015,7, 15, 13, 30, 0),
+      title: 'this is a demo',
+      duration: 60,
+      recurring: {
+        freq: 'WEEKLY',
+        interval: 1
+      }
+    };
+    console.log('ical', Calendar.ical([calEvent]));
+    console.log('outlook', Calendar.outlook(calEvent));
+    console.log('google', Calendar.google(calEvent));
+    console.log('yahoo', Calendar.yahoo(calEvent));
+  });
 angular
   .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);
@@ -541,6 +557,9 @@ angular
 
 ShowEventsController.$inject = ["Event", "$state"];
 function ShowEventsController(Event, $state) {
+  
+  var self = this;
+
   this.selected = Event.get($state.params);
 
   this.delete = function deleteEvent() {
