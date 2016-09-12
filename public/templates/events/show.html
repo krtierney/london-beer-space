@@ -1,7 +1,7 @@
 <img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
 
 <div ng-resource="event in events">
-  <h1>{{ showEvent.selected.title }}</h1>
+  <h1 class="event-title">{{ showEvent.selected.title }}</h1>
   <h4>{{ showEvent.selected.date | date: 'EEEE, dd MMMM yyyy, h:mm a' }}</h4>
   <p>{{ showEvent.selected.description }} </p>
   <h5>{{ showEvent.selected.location }} </h5>
