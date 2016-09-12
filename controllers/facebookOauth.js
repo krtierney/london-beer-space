@@ -10,7 +10,7 @@ function login(req, res) {
       client_id: process.env.FACEBOOK_API_KEY,
       client_secret: process.env.FACEBOOK_SECRET_KEY,
       code: req.body.code,
-      redirect_uri: "http://london-beer-space.herokuapp.com/"
+      redirect_uri: req.headers.origin + "/"
     },
     json: true
   }).then(function(access_token) {
