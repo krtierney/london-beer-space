@@ -1,5 +1,6 @@
 $primary-color: rgba(0,152,196,1); 
 $secondary-color: #EB5E4B;
+$tertiary-color: #FA757B;
 
 body { 
   background: #FEFEFE;
@@ -22,6 +23,7 @@ main, form {
 ul.index-list {
   min-height: 8em;
   padding: 0.5% 2%;
+  display: flex;
 }
 
 .date-card {
@@ -30,9 +32,10 @@ ul.index-list {
   border: 1px solid $primary-color;
   border-radius: 5px;
   text-align: center;
-  vertical-align: middle;
   display: inline-block;
   float: left;
+  align-self: center;
+
   .dd {
     font-size: 2em;
     line-height: 1em;
@@ -43,13 +46,13 @@ ul.index-list {
   }
 }
 
-h1.event-title, h2.event-title {
+h1.event-title, h2.event-title, h1 {
   color: $primary-color;
   font-family: "balboa",sans-serif;
 }
 
 h2.event-title {
-  padding-left: 4em;
+  padding-left: 1em;
   a {
     color: inherit;
     
@@ -65,7 +68,7 @@ h2.event-title {
 
 p.location {
   font-size: 1.2em;
-  padding-left: 6.3em;
+  padding-left: 1.7em;
 }
 
 .even { background: #f4f4f4; } 
@@ -88,6 +91,7 @@ img.event-thumb {
 img.title {
   max-width: 20em;
   padding-left: 2%;
+  margin-right: 14%;
 }
 
 nav {

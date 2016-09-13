@@ -9,22 +9,12 @@ var userSchema = new mongoose.Schema({
   bio: String,
   avatar: String,
   facebookID: Number,
-  twitterID: Number
+  twitterID: Number,
 });
 
-// userSchema.set('toJSON', {
-//   transform: function(document, json) {
-//     delete json.passwordHash;
-//     delete json.__v;
-//     return json;
-//   }
-// });
-
 userSchema.pre('validate', function(next) {
-  if(!this._password && !this.facebookID) {
-    if (!this._password && !this.twitterID) {
-      this.invalidate('password', 'A password is required');
-    }
+  if(!this._password && !this.facebookID && !this.twitterID) {
+    this.invalidate('password', 'A password is required');
   } 
   next();
 });

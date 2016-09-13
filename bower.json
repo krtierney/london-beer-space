@@ -16,6 +16,7 @@
   ],
   "dependencies": {
     "angular": "^1.5.8",
+    "ngCalendar": "https://github.com/udacity/ngCalendar.git#0.0.4",
     "angular-resource": "^1.5.8",
     "angular-ui-router": "ui-router#^0.3.1",
     "angular-messages": "^1.5.8",

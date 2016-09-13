@@ -16,14 +16,19 @@
 
 <body sticky-footer ng-controller="CurrentUserController as user">
   <header>
+  <div class="navbar-header">
+  </div>
     <nav class="nav bg-faded navbar-fixed-top">
-      <!-- Change .hidden-xs to collapsible nav -->
-      <ul class="nav navbar-nav pull-right hidden-xs">
+      <ul class="nav navbar-nav pull-right">
         <li class="nav-item" ui-sref-active="active" ng-if="!user.currentUser">
-          <a class="nav-link" ui-sref="login">Log In</a>
+          <a class="nav-link" ui-sref="login">
+          <!-- <span class="glyphicon glyphicon-log-in"></span> -->
+          Log In</a>
         </li>
         <li class="nav-item" ui-sref-active="active" ng-if="!user.currentUser">
-          <a class="nav-link" ui-sref="register">Register</a>
+          <a class="nav-link" ui-sref="register">
+          <!-- <span class="glyphicon glyphicon-user"></span> -->
+          Register</a>
         </li>
         <li class="nav-item" ui-sref-active="active">
           <a class="nav-link" ui-sref="eventsIndex">Events</a>
