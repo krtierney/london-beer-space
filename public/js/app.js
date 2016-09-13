@@ -1,5 +1,5 @@
 angular
-  .module('LdnBeerApp', ['ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors', 'ngCalendar'])
+  .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
   .config(oAuthConfig)
   .config(Router);
 
@@ -47,7 +47,7 @@ angular
       .state("showEvent", {
         url: "/events/:id",
         templateUrl: "templates/events/show.html",
-        controller: "ShowEventsController as showEvent"
+        controller: "Calendar as showEvent"
       })
       .state("updateEvent", {
         url: "/events/:id/update",
@@ -410,25 +410,6 @@ angular
     };
   };
 angular
-  .module('LdnBeerApp')
-  .factory('formData', formData);
-
-function formData() {
-  return {
-    transform: function(data) {
-      var formData = new FormData();
-      angular.forEach(data, function(value, key) {
-        if(value._id) value = value._id;
-        if(!key.match(/^\$/)) formData.append(key, value);
-      });
-
-      return formData;
-    }
-  }
-}
-
-
-angular
   .module("LdnBeerApp")
   .factory("Event", Event);
 
@@ -464,22 +445,25 @@ function User($resource) {
     register: { method: "POST", url: "/api/register" }
   });
 }
-angular.module('LdnBeerApp')
-  .controller('Calendar', function(Calendar) {
-    var calEvent = {
-      start: new Date(2015,7, 15, 13, 30, 0),
-      title: 'this is a demo',
-      duration: 60,
-      recurring: {
-        freq: 'WEEKLY',
-        interval: 1
-      }
-    };
-    // console.log('ical', Calendar.ical([calEvent]));
-    // console.log('outlook', Calendar.outlook(calEvent));
-    // console.log('google', Calendar.google(calEvent));
-    // console.log('yahoo', Calendar.yahoo(calEvent));
-  });
+angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
 angular
   .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);
@@ -553,37 +537,36 @@ angular
   });
 angular
   .module("LdnBeerApp")
-  .controller("ShowEventsController", ShowEventsController);
+  .controller("Calendar", Calendar);
 
-ShowEventsController.$inject = ["Event", "$state"];
-function ShowEventsController(Event, $state) {
+Calendar.$inject = ["Event", "$state", "Calendar"];
+function Calendar(Event, $state, Calendar) {
   
   var self = this;
 
-  this.selected = Event.get($state.params);
+  Event.get($state.params).$promise.then(function(event) {
 
-  //returns selected event object
-  console.log(this.selected);
+    self.selected = event;
 
-  //returns undefined
-  console.log(this.selected.date);
+    var calEvent = {
+      start: new Date(self.selected.date),
+      title: self.selected.title,
+      description: self.selected.description
+      }
+    
+    console.log('ical', Calendar.ical([calEvent]));
+    console.log('outlook', Calendar.outlook(calEvent));
+    console.log('google', Calendar.google(calEvent));
+    console.log('yahoo', Calendar.yahoo(calEvent));
+  });
+
+
 
   this.delete = function deleteEvent() {
     this.selected.$delete(function() {
       $state.go("eventsIndex");
     });
   }
-
-  this.calEvent = {};
-
-  this.generateCal = function() {
-    self.calEvent = {
-      start: self.selected.date,
-      title: self.selected.title,
-    };
-    return self.calEvent;
-  }
-
 }
 angular
   .module("LdnBeerApp")
