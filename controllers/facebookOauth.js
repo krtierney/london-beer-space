@@ -23,14 +23,14 @@ function login(req, res) {
     return User.findOne({ email: profile.email })
       .then(function(user) {
         if(user) {
-          user.facebookId = profile.id;
+          user.facebookID = profile.id;
           user.avatar = profile.picture ? profile.picture.data.url : null;
         }
         else {
           user = new User({
             username: profile.login,
             email: profile.email,
-            facebookId: profile.id,
+            facebookID: profile.id,
             avatar: profile.avatar
           });
         }

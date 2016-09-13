@@ -21,10 +21,8 @@ var userSchema = new mongoose.Schema({
 // });
 
 userSchema.pre('validate', function(next) {
-  if(!this._password && !this.facebookID) {
-    if (!this._password && !this.twitterID) {
-      this.invalidate('password', 'A password is required');
-    }
+  if(!this._password && !this.facebookID && !this.twitterID) {
+    this.invalidate('password', 'A password is required');
   } 
   next();
 });

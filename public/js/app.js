@@ -410,6 +410,25 @@ angular
     };
   };
 angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
+angular
   .module("LdnBeerApp")
   .factory("Event", Event);
 
@@ -445,25 +464,6 @@ function User($resource) {
     register: { method: "POST", url: "/api/register" }
   });
 }
-angular
-  .module('LdnBeerApp')
-  .factory('formData', formData);
-
-function formData() {
-  return {
-    transform: function(data) {
-      var formData = new FormData();
-      angular.forEach(data, function(value, key) {
-        if(value._id) value = value._id;
-        if(!key.match(/^\$/)) formData.append(key, value);
-      });
-
-      return formData;
-    }
-  }
-}
-
-
 angular.module('LdnBeerApp')
   .controller('Calendar', function(Calendar) {
     var calEvent = {
@@ -475,10 +475,10 @@ angular.module('LdnBeerApp')
         interval: 1
       }
     };
-    console.log('ical', Calendar.ical([calEvent]));
-    console.log('outlook', Calendar.outlook(calEvent));
-    console.log('google', Calendar.google(calEvent));
-    console.log('yahoo', Calendar.yahoo(calEvent));
+    // console.log('ical', Calendar.ical([calEvent]));
+    // console.log('outlook', Calendar.outlook(calEvent));
+    // console.log('google', Calendar.google(calEvent));
+    // console.log('yahoo', Calendar.yahoo(calEvent));
   });
 angular
   .module("LdnBeerApp")
@@ -562,11 +562,28 @@ function ShowEventsController(Event, $state) {
 
   this.selected = Event.get($state.params);
 
+  //returns selected event object
+  console.log(this.selected);
+
+  //returns undefined
+  console.log(this.selected.date);
+
   this.delete = function deleteEvent() {
     this.selected.$delete(function() {
       $state.go("eventsIndex");
     });
   }
+
+  this.calEvent = {};
+
+  this.generateCal = function() {
+    self.calEvent = {
+      start: self.selected.date,
+      title: self.selected.title,
+    };
+    return self.calEvent;
+  }
+
 }
 angular
   .module("LdnBeerApp")
