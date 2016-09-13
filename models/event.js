@@ -8,8 +8,9 @@ var eventSchema = new mongoose.Schema({
   location: { type: String, required: true },
   image: { type: String }, 
   registrationUrl: { type: String },
-  type: { type: String }
-});
+  type: { type: String },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+}, { timestamps: true });
 
 eventSchema.path('image')
   .get(function(image) {

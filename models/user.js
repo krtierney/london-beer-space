@@ -9,16 +9,8 @@ var userSchema = new mongoose.Schema({
   bio: String,
   avatar: String,
   facebookID: Number,
-  twitterID: Number
+  twitterID: Number,
 });
-
-// userSchema.set('toJSON', {
-//   transform: function(document, json) {
-//     delete json.passwordHash;
-//     delete json.__v;
-//     return json;
-//   }
-// });
 
 userSchema.pre('validate', function(next) {
   if(!this._password && !this.facebookID && !this.twitterID) {

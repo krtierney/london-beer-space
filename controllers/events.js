@@ -1,7 +1,14 @@
 var Event = require('../models/event');
 
 function eventIndex(req, res) {
-  Event.find()
+
+  var today = new Date();
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+
+  Event.find({ date: { $gte: today }})
     .then(function(events) {
       res.status(200).json(events)
     })
@@ -14,6 +21,8 @@ function eventIndex(req, res) {
 function eventCreate(req, res) {
 
   if(req.file) req.body.image = req.file.key;
+
+  req.body.createdBy = req.user._id;
 
   Event.create(req.body)
     .then(function(event) {
@@ -49,7 +58,13 @@ function eventUpdate(req, res) {
 
   Event.findById(req.params.id)
     .then(function(event) {
-      // if (req.user._id !== event.user) res.send(401)
+      if (req.user._id !== event.createdBy && !req.user.isAdmin) {
+        var e = new Error("Unauthorized");
+        e.name = "AuthorizationError";
+
+        throw e;
+      }
+
       for(key in req.body) event[key] = req.body[key];
       return event.save();
     })
@@ -60,13 +75,17 @@ function eventUpdate(req, res) {
       res.status(200).json(event);
     })
     .catch(function(err) {
-      console.log(err);
-      if(err.name && err.name === "ValidationError") {
-        res.status(400).json(err);
-      } else {
-        console.log("eventUpdateError: ", err);
-        res.status(500).json(err);
+
+      if(err.name && err.name === "AuthorizationError") {
+        return res.status(401).json(err);
       }
+
+      if(err.name && err.name === "ValidationError") {
+        return res.status(400).json(err);
+      }
+
+      console.log("eventUpdateError: ", err);
+      return res.status(500).json(err);
     });
 }
 

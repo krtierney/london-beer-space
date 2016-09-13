@@ -1,7 +1,13 @@
 angular
   .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
+  .config(whitelistHrefs)
   .config(oAuthConfig)
   .config(Router);
+
+  whitelistHrefs.$inject = ["$compileProvider"];
+  function whitelistHrefs($compileProvider) {
+    $compileProvider.aHrefSanitizationWhitelist(/^data:text/);
+  };
 
   oAuthConfig.$inject = ["$authProvider"];
   function oAuthConfig($authProvider) {
@@ -84,9 +90,7 @@ function EventsController(Event, $state) {
   this.new = {};
 
   this.select = function select(event) {
-    console.log($state.params);
     $state.go("showEvent");
-    console.log($state.params);
     this.selected = Event.get($state.params);
   }
 
@@ -114,8 +118,8 @@ function EventsController(Event, $state) {
       $state.go("eventsIndex");
     });
   }
-
 }
+
 angular
   .module("LdnBeerApp")
   .controller("LoginController", LoginController);
@@ -539,8 +543,8 @@ angular
   .module("LdnBeerApp")
   .controller("Calendar", Calendar);
 
-Calendar.$inject = ["Event", "$state", "Calendar"];
-function Calendar(Event, $state, Calendar) {
+Calendar.$inject = ["Event", "$state", "Calendar", "$auth"];
+function Calendar(Event, $state, Calendar, $auth) {
   
   var self = this;
 
@@ -554,14 +558,13 @@ function Calendar(Event, $state, Calendar) {
       description: self.selected.description,
       address: self.selected.location
     }
-    
-    console.log('ical', Calendar.ical([calEvent]));
-    console.log('outlook', Calendar.outlook(calEvent));
-    console.log('google', Calendar.google(calEvent));
-    console.log('yahoo', Calendar.yahoo(calEvent));
+    self.ical = Calendar.ical([calEvent]);
+    self.gcal = Calendar.google(calEvent);
+    self.outlook = Calendar.outlook(calEvent);
+    self.yahoo = Calendar.yahoo(calEvent);
+
+    self.canEdit = self.selected.createdBy == $auth.getPayload()._id || $auth.getPayload().isAdmin;
   });
-
-
 
   this.delete = function deleteEvent() {
     this.selected.$delete(function() {

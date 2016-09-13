@@ -1,4 +1,4 @@
-<ul class="index-list" ng-repeat="event in events.all | filter: afterToday() | orderBy: 'date'" ng-class="$even ? 'even' : 'odd'">
+<ul class="index-list" ng-repeat="event in events.all | orderBy: 'date'" ng-class="$even ? 'even' : 'odd'">
   <div class="date-card">{{ event.date | date: 'EEE' }}<br/><p class="dd">{{ event.date | date: 'dd' }}</p>{{ event.date | date: 'MMMM' }}</div>
   <div>
   <h2 class="event-title"><a href="#" class="index-link" ui-sref="showEvent({ id: event._id })">{{ event.title }}</a></h2>

@@ -6,7 +6,7 @@ function register(req, res) {
   User.create(req.body, function(err, user) {
     if(err) return res.status(400).json(err);
 
-    var payload = { _id: user._id, username: user.username };
+    var payload = { _id: user._id, username: user.username, isAdmin: user.isAdmin };
     var token = jwt.sign(payload, secret, { expiresIn: 60*60*12 });
 
     return res.status(200).json({
@@ -23,7 +23,7 @@ function login(req, res) {
       return res.status(401).json({ message: "Incorrect email address or password" });
     }
 
-    var payload = { _id: user._id, username: user.username };
+    var payload = { _id: user._id, username: user.username, isAdmin: user.isAdmin };
     var token = jwt.sign(payload, secret, { expiresIn: 60*60*12 });
     
     return res.status(200).json({ 

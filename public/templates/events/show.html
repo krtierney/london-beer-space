@@ -7,7 +7,11 @@
   <p class="lead">{{ showEvent.selected.description }} </p>
   <address>{{ showEvent.selected.location }} </address>
 
-  <p><a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
+  <p ng-show="showEvent.canEdit">
+    <a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
+    <a href="#" ng-click="showEvent.delete()">Delete this event</a>
+  </p>
+  
+  <p><a ng-href="{{ showEvent.ical }}">Apple iCal</a>  |  <a ng-href="{{ showEvent.gcal }}">Google</a>  |  <a ng-href="{{ showEvent.outlook }}">Outlook</a>  |  <a ng-href="{{ showEvent.yahoo }}">Yahoo</a></p>
 
-  <a href="#" ng-click="showEvent.delete()">Delete this event</a></p>
 </div>
