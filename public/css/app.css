@@ -18,6 +18,11 @@ body {
 main, form {
   padding-bottom: 2em; }
 
+.g-map {
+  height: 200px;
+  width: 300px;
+  display: inline-block; }
+
 ul.index-list {
   min-height: 8em;
   padding: 0.5% 2%; }
