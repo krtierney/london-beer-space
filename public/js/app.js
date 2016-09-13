@@ -553,7 +553,7 @@ function Calendar(Event, $state, Calendar) {
       title: self.selected.title,
       description: self.selected.description,
       address: self.selected.location
-      }
+    }
     
     console.log('ical', Calendar.ical([calEvent]));
     console.log('outlook', Calendar.outlook(calEvent));
