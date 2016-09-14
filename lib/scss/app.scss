@@ -11,6 +11,12 @@ body {
   overflow-x: hidden;
 }
 
+.glyphicon-nav {
+  min-height: 44px;
+  min-width: 44px;
+  font-size: 2em;
+}
+
 main, form {
   padding-bottom: 2em;
 }
@@ -20,7 +26,6 @@ nav>ul {
 
   @media only screen and (min-width : 992px) {
     padding: 2% 3% 0 0;
-    font-size: 1.5em;
       }
 }
 
