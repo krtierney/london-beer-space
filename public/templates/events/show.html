@@ -1,4 +1,4 @@
-<img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
+<img class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" ng-if="showEvent.hasImage" onerror="this.style.display='none'"">
 
 <div ng-resource="event in events">
   <h4 class="event-date secondary-light text-uppercase">{{ showEvent.selected.date | date: 'EEE dd MMMM yyyy, h:mm a' }}</h4>
