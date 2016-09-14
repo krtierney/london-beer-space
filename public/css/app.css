@@ -117,6 +117,11 @@ img.event-thumb {
 
 .oauth-buttons {
   margin: 4em 0 2em 0; }
+  @media only screen and (max-width: 768px) {
+    .oauth-buttons a {
+      display: block;
+      width: 60%;
+      margin: 10px auto; } }
 
 img.title {
   max-width: 20em;
