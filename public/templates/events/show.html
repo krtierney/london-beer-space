@@ -6,10 +6,6 @@
 
   <h1 class="event-title">{{ showEvent.selected.title }}</h1>
   <p class="lead">{{ showEvent.selected.description }} </p>
-  <p>
-    <a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
-    <a href="#" ng-click="showEvent.delete()">Delete this event</a>
-  </p>
   <address>{{ showEvent.selected.location }} </address>
 
   <p ng-show="showEvent.canEdit">
@@ -20,7 +16,6 @@
   <p><a ng-href="{{ showEvent.ical }}">Apple iCal</a>  |  <a ng-href="{{ showEvent.gcal }}">Google</a>  |  <a ng-href="{{ showEvent.outlook }}">Outlook</a>  |  <a ng-href="{{ showEvent.yahoo }}">Yahoo</a></p>
 
 </div>
-
 <!-- hide map until location is clicked -->
 
   <div ng-controller="MapsController as maps">
