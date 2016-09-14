@@ -3,14 +3,20 @@
 
   <form ng-submit="updateEvent.update()" name="editEvent.form" novalidate>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{ showSuccess: true }">
       <label for="title">Title:</label>
-      <input class="form-control" type="text" name="title" ng-model="updateEvent.selected.title" placeholder="Title" required>
+      <div>
+        <input class="form-control" type="text" name="title" ng-model="updateEvent.selected.title" placeholder="Title" required>
+        <p class="help-block" ng-if="editEvent.form.title.$error.required">Your event needs a title!</p>
+      </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{ showSuccess: true }">
       <label for="description">Description:</label>
-      <textarea class="form-control" rows="5" type="text" name="description" ng-model="updateEvent.selected.description" placeholder="Description" required></textarea>
+      <div>
+        <textarea class="form-control" rows="5" type="text" name="description" ng-model="updateEvent.selected.description" placeholder="Description" required></textarea>
+        <p class="help-block" ng-if="editEvent.form.description.$error.required">Doesn't need to be long, but we need a description.</p>
+      </div>
     </div>
 
     <div class="form-group">
@@ -37,9 +43,12 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group" show-errors="{ showSuccess: true }">
       <label for="location">Location:</label>
-      <input class="form-control" type="text" autocomplete options="{ country: 'gb', watchEnter: true }" name="location" ng-model="updateEvent.selected.location" placeholder="Location" required>
+      <div>
+        <input class="form-control" type="text" autocomplete options="{ country: 'gb', watchEnter: true }" name="location" ng-model="updateEvent.selected.location" placeholder="Location" required>
+        <p class="help-block" ng-if="editEvent.form.location.$error.required">Please include a location</p>
+      </div>
     </div>
 
     <div class="form-group">

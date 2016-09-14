@@ -19,7 +19,6 @@
     "ngCalendar": "https://github.com/udacity/ngCalendar.git#0.0.4",
     "angular-resource": "^1.5.8",
     "angular-ui-router": "ui-router#^0.3.1",
-    "angular-messages": "^1.5.8",
     "angular-touch": "^1.5.8",
     "angular-animate": "^1.5.8",
     "angular-jwt": "^0.1.3",
