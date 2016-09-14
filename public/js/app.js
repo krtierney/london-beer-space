@@ -1,5 +1,5 @@
 angular
-  .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
+  .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
   .config(whitelistHrefs)
   .config(oAuthConfig)
   .config(Router);

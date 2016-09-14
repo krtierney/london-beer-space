@@ -115,3 +115,11 @@ nav {
     padding: 0.5em 3%;
   }
  }
+
+ .form-group .help-block {
+   display: none;
+ }
+
+ .form-group.has-error .help-block {
+   display: block;
+ }
