@@ -18,6 +18,13 @@ body {
 main, form {
   padding-bottom: 2em; }
 
+nav > ul {
+  padding: 1%; }
+  @media only screen and (min-width: 992px) {
+    nav > ul {
+      padding: 2% 3% 0 0;
+      font-size: 1.5em; } }
+
 ul.index-list {
   min-height: 8em;
   padding: 0.5% 2%;
@@ -55,7 +62,6 @@ h2.event-title {
   color: #f5b0a7; }
 
 p.location {
-  font-size: 1.2em;
   padding-left: 1.7em; }
 
 .even {
@@ -77,8 +83,15 @@ img.event-thumb {
 
 img.title {
   max-width: 20em;
-  padding-left: 2%;
-  margin-right: 14%; }
+  padding-left: 2%; }
+  @media only screen and (max-width: 768px) {
+    img.title {
+      margin-right: 3%; } }
+
+@media only screen and (min-width: 992px) {
+  .form-group {
+    max-width: 70%;
+    margin: 1em auto; } }
 
 nav {
   background: #fca1a6;

@@ -18,26 +18,20 @@
   <header>
   <div class="navbar-header">
   </div>
-    <nav class="nav bg-faded navbar-fixed-top">
-      <ul class="nav navbar-nav pull-right">
-        <li class="nav-item" ui-sref-active="active" ng-if="!user.currentUser">
-          <a class="nav-link" ui-sref="login">
-          <!-- <span class="glyphicon glyphicon-log-in"></span> -->
-          Log In</a>
+    <nav class="navbar-fixed-top">
+      <ul class="list-inline pull-right">
+        <li ng-if="!user.currentUser">
+          <a ui-sref="login" title="Log In">
+          <span class="glyphicon glyphicon-user"></span></a>
         </li>
-        <li class="nav-item" ui-sref-active="active" ng-if="!user.currentUser">
-          <a class="nav-link" ui-sref="register">
-          <!-- <span class="glyphicon glyphicon-user"></span> -->
-          Register</a>
+        <li>
+          <a ui-sref="eventsIndex" title="Events"><span class="glyphicon glyphicon-calendar"></span></a>
         </li>
-        <li class="nav-item" ui-sref-active="active">
-          <a class="nav-link" ui-sref="eventsIndex">Events</a>
+        <li ng-if="user.currentUser">
+          <a ui-sref="createEvent" title="Add Event"><span class="glyphicon glyphicon-plus"></span></a>
         </li>
-        <li class="nav-item" ui-sref-active="active" ng-if="user.currentUser">
-          <a class="nav-link" ui-sref="createEvent">Add Event</a>
-        </li>
-        <li class="nav-item" ui-sref-active="active" ng-if="user.currentUser">
-          <a class="nav-link" href="#" ng-click="user.logout()">Log Out</a>
+        <li ng-if="user.currentUser">
+          <a href="#" ng-click="user.logout()" title="Log out"><span class="glyphicon glyphicon-log-out"></span></a>
         </li>
       </ul>
       <h1><a ui-sref="home"><img ng-src="../assets/head.svg" alt="London Beer Space" class="title" type="image/svg+xml"></a></h1>
