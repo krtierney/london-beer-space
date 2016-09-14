@@ -183,7 +183,7 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
 
   $rootScope.$on("unauthorized", function() {
     $state.go("login");
-    self.errorMessage = "Please log in.";
+    self.errorMessage = "Please log in";
   });
 
   this.logout = function() {
@@ -191,6 +191,14 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
     this.currentUser = null;
     $state.go("home");
   }
+
+  $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+
+    if(["createEvent", "editEvent"].indexOf(toState.name) !== -1 && !$auth.isAuthenticated()) {
+      e.preventDefault();
+      $state.go('login');
+    }
+  });
 }
 angular.module('LdnBeerApp')
   .directive('autocomplete', autocomplete)
@@ -363,13 +371,15 @@ angular
   .module('LdnBeerApp')
   .directive('file', file);
 
-function file() {
+file.$inject = ["$rootScope"];
+function file($rootScope) {
   return {
     restrict: 'A',
     require: "ngModel",
     link: function(scope, element, attrs, ngModel) {
       element.on('change', function(e) {
         ngModel.$setViewValue(e.target.files[0]);
+        $rootScope.$broadcast("fileSelected", e.target.files[0]);
       });
     }
   }
@@ -472,9 +482,27 @@ angular
   .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);
 
-CreateEventsController.$inject = ["Event", "$state"];
-function CreateEventsController(Event, $state) {
+CreateEventsController.$inject = ["Event", "$state", "$rootScope"];
+function CreateEventsController(Event, $state, $rootScope) {
+  var self = this;
   this.new = {};
+
+  $rootScope.$on("fileSelected", function(e, file) {
+
+    if(self.form) {
+      self.form.image.$setUntouched();
+      self.form.image.$setValidity("size", true);
+    }
+
+    $rootScope.$applyAsync(function() {
+      if(file.size > 250000) {
+        if(self.form) {
+          self.form.image.$setValidity("size", false);
+          self.form.image.$setTouched(true);
+        }
+      }
+    });
+  });
 
   this.save = function() {
     Event.save(this.new, function() {
