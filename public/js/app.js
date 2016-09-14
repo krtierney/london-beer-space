@@ -414,6 +414,25 @@ angular
     };
   };
 angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
+angular
   .module("LdnBeerApp")
   .factory("Event", Event);
 
@@ -449,25 +468,6 @@ function User($resource) {
     register: { method: "POST", url: "/api/register" }
   });
 }
-angular
-  .module('LdnBeerApp')
-  .factory('formData', formData);
-
-function formData() {
-  return {
-    transform: function(data) {
-      var formData = new FormData();
-      angular.forEach(data, function(value, key) {
-        if(value._id) value = value._id;
-        if(!key.match(/^\$/)) formData.append(key, value);
-      });
-
-      return formData;
-    }
-  }
-}
-
-
 angular
   .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);

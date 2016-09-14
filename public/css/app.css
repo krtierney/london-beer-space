@@ -13,7 +13,8 @@ body {
   font-family: "Lato", "Helvetica Neue", sans-serif;
   font-weight: 300;
   font-size: 16px;
-  padding-top: 10em; }
+  padding-top: 10em;
+  overflow-x: hidden; }
 
 main, form {
   padding-bottom: 2em; }
