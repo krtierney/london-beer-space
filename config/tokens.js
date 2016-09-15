@@ -1,3 +1,3 @@
 module.exports = {
-  secret: "LondonBeerIsReallyPrettyGood"
+  secret: process.env.LBS_SECRET_TOKEN
 }
