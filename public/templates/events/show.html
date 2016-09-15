@@ -1,16 +1,13 @@
-<<<<<<< HEAD
-
-<img  class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" onerror="this.style.display='none'"">
-=======
 <img class="img-responsive pull-left event-feature" ng-src="{{ showEvent.selected.image }}" alt="event image" ng-if="showEvent.hasImage" onerror="this.style.display='none'"">
->>>>>>> master
+
 
 <div ng-resource="event in events">
   <h4 class="event-date secondary-light text-uppercase">{{ showEvent.selected.date | date: 'EEE dd MMMM yyyy, h:mm a' }}</h4>
 
   <h1 class="event-title">{{ showEvent.selected.title }}</h1>
   <p class="lead">{{ showEvent.selected.description }} </p>
-  <address>{{ showEvent.selected.location }} </address>
+<!--   <p ng-if="showEvent.selected.registrationUrl"><a ng-href="{{ showEvent.selected.registrationUrl }}">Register for this event</a></p> -->
+  <address>{{ showEvent.selected.venue }} <br>{{ showEvent.selected.location }} </address>
 
   <p ng-show="showEvent.canEdit">
     <a ui-sref="updateEvent({ id: showEvent.selected._id })">Update this event</a>  |  
@@ -22,10 +19,9 @@
 </div>
 <!-- hide map until location is clicked -->
 
-  <div ng-controller="MapsController as maps">
-  <!-- set center to event location (need to modify form to pull in geometry) -->
+<!--   <div ng-controller="MapsController as maps">
     <g-map ng-repeat="map in maps.all" center="map.center"></g-map>
-  </div>
+  </div> -->
 
 
 </div>

@@ -64,8 +64,12 @@ ul.index-list {
 div.homepage {
   height: 350px;
   width: 350px;
-  float: left;
-  margin: 2%;
+  margin: 20px auto;
+
+  @media only screen and (min-width : 768px) {
+    float: left;
+    margin: 2%;
+  }
 }
 
 .shading {

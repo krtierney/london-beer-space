@@ -77,61 +77,6 @@ angular
   }
 
 angular
-  .module('LdnBeerApp')
-  .factory('formData', formData);
-
-function formData() {
-  return {
-    transform: function(data) {
-      var formData = new FormData();
-      angular.forEach(data, function(value, key) {
-        if(value._id) value = value._id;
-        if(!key.match(/^\$/)) formData.append(key, value);
-      });
-
-      return formData;
-    }
-  }
-}
-
-
-angular
-  .module("LdnBeerApp")
-  .factory("Event", Event);
-
-Event.$inject = ["$resource", "formData"];
-function Event($resource, formData) {
-  return $resource("/api/events/:id", { id: '@_id' }, {
-    save: { 
-      method: "POST",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    },
-    update: { 
-      method: "PUT",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    },
-    update: { 
-      method: "PATCH",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    }
-  });
-}
-angular
-  .module("LdnBeerApp")
-  .factory("User", User);
-
-User.$inject = ["$resource"];
-function User($resource) {
-  return $resource("/api/users", { id: '@_id' }, {
-    update: { method: "PUT" },
-    login: { method: "POST", url: "/api/login" },
-    register: { method: "POST", url: "/api/register" }
-  });
-}
-angular
   .module("LdnBeerApp")
   .controller("EventsController", EventsController);
 
@@ -271,151 +216,19 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
 angular.module('LdnBeerApp')
   .directive('autocomplete', autocomplete)
 
-function autocomplete() {
+autocomplete.$inject = ["$rootScope"];
+function autocomplete($rootScope) {
   return {
-    require: 'ngModel',
-    scope: {
-      ngModel: '=',
-      options: '=?',
-      details: '=?'
-    },
+    restrict: 'A',
+    link: function(scope, element) {
+        var autocomplete = new google.maps.places.Autocomplete(element[0]);
 
-  link: function(scope, element, attrs, controller) {
-
-    //options for autocomplete
-    var opts
-    var watchEnter = false
-    //convert options provided to opts
-    var initOpts = function() {
-
-      opts = {}
-      if (scope.options) {
-
-        if (scope.options.watchEnter !== true) {
-          watchEnter = false
-        } else {
-          watchEnter = true
-        }
-
-        if (scope.options.types) {
-          opts.types = []
-          opts.types.push(scope.options.types)
-          scope.gPlace.setTypes(opts.types)
-        } else {
-          scope.gPlace.setTypes([])
-        }
-
-        if (scope.options.bounds) {
-          opts.bounds = scope.options.bounds
-          scope.gPlace.setBounds(opts.bounds)
-        } else {
-          scope.gPlace.setBounds(null)
-        }
-
-        if (scope.options.country) {
-          opts.componentRestrictions = {
-            country: scope.options.country
-          }
-          scope.gPlace.setComponentRestrictions(opts.componentRestrictions)
-        } else {
-          scope.gPlace.setComponentRestrictions(null)
-        }
-      }
+        autocomplete.addListener('place_changed', function(place) {
+          $rootScope.$broadcast("placeChanged", autocomplete.getPlace());
+        });
     }
-
-    if (scope.gPlace == undefined) {
-      scope.gPlace = new google.maps.places.Autocomplete(element[0], {});
-    }
-    google.maps.event.addListener(scope.gPlace, 'place_changed', function() {
-      var result = scope.gPlace.getPlace();
-      if (result !== undefined) {
-        if (result.address_components !== undefined) {
-
-          scope.$apply(function() {
-
-            scope.details = result;
-
-            controller.$setViewValue(element.val());
-          });
-        }
-        else {
-          if (watchEnter) {
-            getPlace(result)
-          }
-        }
-      }
-    })
-
-    //function to get retrieve the autocompletes first result using the AutocompleteService 
-    var getPlace = function(result) {
-      var autocompleteService = new google.maps.places.AutocompleteService();
-      if (result.name.length > 0){
-        autocompleteService.getPlacePredictions(
-          {
-            input: result.name,
-            offset: result.name.length
-          },
-          function listentoresult(list, status) {
-            if(list == null || list.length == 0) {
-
-              scope.$apply(function() {
-                scope.details = null;
-              });
-
-            } else {
-              var placesService = new google.maps.places.PlacesService(element[0]);
-              placesService.getDetails(
-                {'reference': list[0].reference},
-                function detailsresult(detailsResult, placesServiceStatus) {
-
-                  if (placesServiceStatus == google.maps.GeocoderStatus.OK) {
-                    scope.$apply(function() {
-
-                      controller.$setViewValue(detailsResult.formatted_address);
-                      element.val(detailsResult.formatted_address);
-
-                      scope.details = detailsResult;
-
-                        //on focusout the value reverts, need to set it again.
-                        var watchFocusOut = element.on('focusout', function(event) {
-                          element.val(detailsResult.formatted_address);
-                          element.unbind('focusout')
-                        })
-
-                      });
-                    }
-                  }
-                );
-              }
-            });
-        }
-      }
-
-      controller.$render = function () {
-        var location = controller.$viewValue;
-        element.val(location);
-      };
-
-      //watch options provided to directive
-      scope.watchOptions = function () {
-        return scope.options
-      };
-      scope.$watch(scope.watchOptions, function () {
-        initOpts()
-      }, true);
-
-    }
-  };
+  }
 }
-
-
-// Usage:
-//  * + details - more detailed autocomplete result, includes address parts, latlng, etc. (Optional)
-// 
-// + options - configuration for the autocomplete (Optional)
-//   + types: type, String, values can be 'geocode', 'establishment', '(regions)', or '(cities)'
-//   + bounds: bounds, Google maps LatLngBounds Object, biases results to bounds, but may return results outside these bounds
-
 
 angular 
   .module('LdnBeerApp')
@@ -526,6 +339,61 @@ angular
   };
 angular
   .module("LdnBeerApp")
+  .factory("Event", Event);
+
+Event.$inject = ["$resource", "formData"];
+function Event($resource, formData) {
+  return $resource("/api/events/:id", { id: '@_id' }, {
+    save: { 
+      method: "POST",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PUT",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PATCH",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    }
+  });
+}
+angular
+  .module("LdnBeerApp")
+  .factory("User", User);
+
+User.$inject = ["$resource"];
+function User($resource) {
+  return $resource("/api/users", { id: '@_id' }, {
+    update: { method: "PUT" },
+    login: { method: "POST", url: "/api/login" },
+    register: { method: "POST", url: "/api/register" }
+  });
+}
+angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
+angular
+  .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);
 
 CreateEventsController.$inject = ["Event", "$state", "$rootScope"];
@@ -547,6 +415,16 @@ function CreateEventsController(Event, $state, $rootScope) {
           self.form.image.$setTouched(true);
         }
       }
+    });
+  });
+
+  $rootScope.$on("placeChanged", function(e, place) {
+    $rootScope.$applyAsync(function() {
+      var location = place.geometry.location.toJSON();
+
+      self.new.lat = location.lat;
+      self.new.lng = location.lng;
+      self.new.location = place.formatted_address;
     });
   });
 
@@ -652,8 +530,11 @@ angular
   .module("LdnBeerApp")
   .controller("UpdateEventsController", UpdateEventsController);
 
-UpdateEventsController.$inject = ["Event", "$state"];
-function UpdateEventsController(Event, $state) {
+UpdateEventsController.$inject = ["Event", "$state", "$rootScope"];
+function UpdateEventsController(Event, $state, $rootScope) {
+  
+  var self = this;
+
   this.selected = Event.get($state.params);
 
   this.update = function updateEvent() {
@@ -661,4 +542,14 @@ function UpdateEventsController(Event, $state) {
       $state.go("showEvent", $state.params);
     });
   }
+
+  $rootScope.$on("placeChanged", function(e, place) {
+    $rootScope.$applyAsync(function() {
+      var location = place.geometry.location.toJSON();
+
+      self.selected.lat = location.lat;
+      self.selected.lng = location.lng;
+      self.selected.location = place.formatted_address;
+    });
+  });
 }
