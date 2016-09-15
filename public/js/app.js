@@ -1,5 +1,5 @@
 angular
-  .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'ngMessages', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
+  .module('LdnBeerApp', ['ngCalendar', 'ui.router', 'ui.bootstrap', 'ngResource', 'ngTouch', 'ngAnimate', 'angular-jwt', 'satellizer', 'ui.bootstrap.datetimepicker', 'ui.bootstrap.showErrors'])
   .config(whitelistHrefs)
   .config(oAuthConfig)
   .config(Router);
@@ -76,6 +76,61 @@ angular
       $urlRouterProvider.otherwise("/");
   }
 
+angular
+  .module('LdnBeerApp')
+  .factory('formData', formData);
+
+function formData() {
+  return {
+    transform: function(data) {
+      var formData = new FormData();
+      angular.forEach(data, function(value, key) {
+        if(value._id) value = value._id;
+        if(!key.match(/^\$/)) formData.append(key, value);
+      });
+
+      return formData;
+    }
+  }
+}
+
+
+angular
+  .module("LdnBeerApp")
+  .factory("Event", Event);
+
+Event.$inject = ["$resource", "formData"];
+function Event($resource, formData) {
+  return $resource("/api/events/:id", { id: '@_id' }, {
+    save: { 
+      method: "POST",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PUT",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    },
+    update: { 
+      method: "PATCH",
+      headers: { 'Content-Type': undefined },
+      transformRequest: formData.transform
+    }
+  });
+}
+angular
+  .module("LdnBeerApp")
+  .factory("User", User);
+
+User.$inject = ["$resource"];
+function User($resource) {
+  return $resource("/api/users", { id: '@_id' }, {
+    update: { method: "PUT" },
+    login: { method: "POST", url: "/api/login" },
+    register: { method: "POST", url: "/api/register" }
+  });
+}
 angular
   .module("LdnBeerApp")
   .controller("EventsController", EventsController);
@@ -196,7 +251,7 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
 
   $rootScope.$on("unauthorized", function() {
     $state.go("login");
-    self.errorMessage = "Please log in.";
+    self.errorMessage = "Please log in";
   });
 
   this.logout = function() {
@@ -204,6 +259,14 @@ function CurrentUserController($state, $rootScope, $auth, $window) {
     this.currentUser = null;
     $state.go("home");
   }
+
+  $rootScope.$on('$stateChangeStart', function(e, toState, toParams, fromState, fromParams) {
+
+    if(["createEvent", "editEvent"].indexOf(toState.name) !== -1 && !$auth.isAuthenticated()) {
+      e.preventDefault();
+      $state.go('login');
+    }
+  });
 }
 angular.module('LdnBeerApp')
   .directive('autocomplete', autocomplete)
@@ -376,13 +439,15 @@ angular
   .module('LdnBeerApp')
   .directive('file', file);
 
-function file() {
+file.$inject = ["$rootScope"];
+function file($rootScope) {
   return {
     restrict: 'A',
     require: "ngModel",
     link: function(scope, element, attrs, ngModel) {
       element.on('change', function(e) {
         ngModel.$setViewValue(e.target.files[0]);
+        $rootScope.$broadcast("fileSelected", e.target.files[0]);
       });
     }
   }
@@ -461,66 +526,29 @@ angular
   };
 angular
   .module("LdnBeerApp")
-  .factory("Event", Event);
-
-Event.$inject = ["$resource", "formData"];
-function Event($resource, formData) {
-  return $resource("/api/events/:id", { id: '@_id' }, {
-    save: { 
-      method: "POST",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    },
-    update: { 
-      method: "PUT",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    },
-    update: { 
-      method: "PATCH",
-      headers: { 'Content-Type': undefined },
-      transformRequest: formData.transform
-    }
-  });
-}
-angular
-  .module("LdnBeerApp")
-  .factory("User", User);
-
-User.$inject = ["$resource"];
-function User($resource) {
-  return $resource("/api/users", { id: '@_id' }, {
-    update: { method: "PUT" },
-    login: { method: "POST", url: "/api/login" },
-    register: { method: "POST", url: "/api/register" }
-  });
-}
-angular
-  .module('LdnBeerApp')
-  .factory('formData', formData);
-
-function formData() {
-  return {
-    transform: function(data) {
-      var formData = new FormData();
-      angular.forEach(data, function(value, key) {
-        if(value._id) value = value._id;
-        if(!key.match(/^\$/)) formData.append(key, value);
-      });
-
-      return formData;
-    }
-  }
-}
-
-
-angular
-  .module("LdnBeerApp")
   .controller("CreateEventsController", CreateEventsController);
 
-CreateEventsController.$inject = ["Event", "$state"];
-function CreateEventsController(Event, $state) {
+CreateEventsController.$inject = ["Event", "$state", "$rootScope"];
+function CreateEventsController(Event, $state, $rootScope) {
+  var self = this;
   this.new = {};
+
+  $rootScope.$on("fileSelected", function(e, file) {
+
+    if(self.form) {
+      self.form.image.$setUntouched();
+      self.form.image.$setValidity("size", true);
+    }
+
+    $rootScope.$applyAsync(function() {
+      if(file.size > 250000) {
+        if(self.form) {
+          self.form.image.$setValidity("size", false);
+          self.form.image.$setTouched(true);
+        }
+      }
+    });
+  });
 
   this.save = function() {
     Event.save(this.new, function() {
@@ -610,6 +638,8 @@ function Calendar(Event, $state, Calendar, $auth) {
     self.yahoo = Calendar.yahoo(calEvent);
 
     self.canEdit = self.selected.createdBy == $auth.getPayload()._id || $auth.getPayload().isAdmin;
+
+    self.hasImage = self.selected.image !== "https://s3-us-west-1.amazonaws.com/london-beer-space/undefined"
   });
 
   this.delete = function deleteEvent() {

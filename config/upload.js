@@ -15,5 +15,9 @@ module.exports = multer({
       var filename = uuid.v1() + ext;
       next(null, filename);
     }
-  })
+  }),
+  limits: { fileSize: 1024 * 1024 },
+  fileFilter: function(req, file, next) {
+    next(null, !!file.mimetype.match('image'));
+  }
 });

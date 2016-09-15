@@ -1,26 +1,28 @@
 <div class="container text-center">
 
   <h1>Create an account</h1>
-  <div class="container" ng-if="register.errorMessage">
-    <div class="alert alert-danger">{{ register.errorMessage }}</div>
-  </div>
   <form ng-submit="register.submit()" name="register.form" novalidate>
 
     <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="username" name="username" id="username" ng-model="register.user.username" placeholder="Username" ng-focus="register.form.username.$setUntouched()" required>
+      <p class="help-block" ng-if="register.form.username.$error.required">Username is required</p>
     </div>
     
     <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="email" name="email" id="email" ng-model="register.user.email" placeholder="Email" ng-focus="register.form.email.$setUntouched()" required>
+      <p class="help-block" ng-if="register.form.email.$error.required">Email is required</p>
+      <p class="help-block" ng-if="register.form.email.$error.email">The email address is invalid</p>
     </div>
 
     <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="password" name="password" id="password" ng-model="register.user.password" placeholder="Enter password" ng-focus="register.form.password.$setUntouched()" required>
+      <p class="help-block" ng-if="register.form.password.$error.required">Password is required</p>
     </div>
     
 
     <div class="form-group" show-errors="{ showSuccess: true }">
       <input class="form-control" type="password" name="passwordConfirmation" id="passwordConfirmation" ng-model="register.user.passwordConfirmation" placeholder="Confirm password" ng-focus="register.form.passwordConfirmation.$setUntouched()" required>
+      <p class="help-block" ng-if="register.form.passwordConfirmation.$error.required">Please confirm your password</p>
     </div>
 
     <input type="submit" class="btn btn-primary" value="Submit" ng-disabled="register.form.$invalid">
