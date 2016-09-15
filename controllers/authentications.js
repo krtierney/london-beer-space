@@ -40,7 +40,7 @@ function updateDetails(req, res) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    user.email = user.email || req.body.email;
+    user.email = req.body.email || user.email;
     user.password = req.body.newPassword;
     user.passwordConfirmation = req.body.passwordConfirmation;
 

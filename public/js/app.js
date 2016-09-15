@@ -126,7 +126,7 @@ angular
 
 LoginController.$inject = ["$state", "$rootScope", "$auth"];
 function LoginController($state, $rootScope, $auth) {
-  
+  var self = this;
   this.credentials = {};
 
   this.submit = function() {
@@ -135,6 +135,9 @@ function LoginController($state, $rootScope, $auth) {
     }).then(function() {
       $rootScope.$broadcast("loggedIn");
       $state.go("eventsIndex");
+    }, function(err) {
+      self.form.email.$setValidity("invalid", false);
+      self.form.password.$setValidity("invalid", false);
     });
   }
 

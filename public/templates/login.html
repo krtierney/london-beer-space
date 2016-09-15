@@ -24,10 +24,9 @@
 
   <div class="text-center">
     <h4 class="center-block">Log in with email</h4>
-
-    <!-- Figure out bootstrap styles for form errors -->
     <form ng-submit="login.submit()" name="login.form" novalidate>
     <div class="form-group" show-errors="{ showSuccess: true }">
+      <p class="help-block" ng-if="login.form.email.$error.invalid || login.form.password.$error.invalid">Unauthorised login. Please check your credentials and try again.</p>
       <input class="form-control" type="email" name="email" id="email" ng-model="login.credentials.email" placeholder="Enter email" ng-focus="login.form.email.$setUntouched()" required>
       <p class="help-block" ng-if="login.form.email.$error.required">Email is required</p>
       <p class="help-block" ng-if="login.form.email.$error.email">The email address is invalid</p>
