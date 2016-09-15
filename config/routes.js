@@ -34,6 +34,7 @@ router.route('/events/:id')
   .delete(secureRoute, eventsController.delete)
   .post(secureRoute, upload.single('image'),eventsController.create);
 
+router.post('/user/update', secureRoute, authController.updateDetails);
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.post('/oauth/facebook', facebookController.login);

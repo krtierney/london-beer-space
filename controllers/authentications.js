@@ -33,7 +33,29 @@ function login(req, res) {
   });
 }
 
+function updateDetails(req, res) {
+  User.findById(req.user._id, function(err, user) {
+    if(err) res.send(500).json(err);
+    if(!user || !user.validatePassword(req.body.oldPassword)) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    user.email = req.body.email;
+    user.password = req.body.newPassword;
+    user.passwordConfirmation = req.body.passwordConfirmation;
+
+    return user.save();
+  })
+  .then(function(user) {
+    res.status(200).json(user);
+  })
+  .catch(function(err) {
+    res.status(400).json(err);
+  });
+}
+
 module.exports = {
   register: register,
-  login: login
+  login: login,
+  updateDetails: updateDetails
 }

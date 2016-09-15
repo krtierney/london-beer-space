@@ -6,7 +6,7 @@ angular
 
   whitelistHrefs.$inject = ["$compileProvider"];
   function whitelistHrefs($compileProvider) {
-    $compileProvider.aHrefSanitizationWhitelist(/^data:text/);
+    $compileProvider.aHrefSanitizationWhitelist(/^(data:text|http)/);
   };
 
   oAuthConfig.$inject = ["$authProvider"];
